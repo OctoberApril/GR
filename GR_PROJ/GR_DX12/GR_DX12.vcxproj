@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{d0f0eca3-fff8-4f0f-8ead-91d204136f94}</ProjectGuid>
+    <RootNamespace>Win32Message</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>GR_DX12</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>intermidiate\$(Platform)\$(Configuration)\</IntDir>
+    <LibraryPath>D:\OtherProjects\test\ConsoleApp1\Win32_Message\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\OtherProjects\test\ConsoleApp1\Win32_Message\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="GPass.cpp" />
+    <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Win32_Message.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="float2.h" />
+    <ClInclude Include="float3.h" />
+    <ClInclude Include="float4.h" />
+    <ClInclude Include="GPass.h" />
+    <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Helper.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="KeyCode.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="Pass.h" />
+    <ClInclude Include="ThirdParty\assimp\aabb.h" />
+    <ClInclude Include="ThirdParty\assimp\ai_assert.h" />
+    <ClInclude Include="ThirdParty\assimp\anim.h" />
+    <ClInclude Include="ThirdParty\assimp\BaseImporter.h" />
+    <ClInclude Include="ThirdParty\assimp\Bitmap.h" />
+    <ClInclude Include="ThirdParty\assimp\BlobIOSystem.h" />
+    <ClInclude Include="ThirdParty\assimp\ByteSwapper.h" />
+    <ClInclude Include="ThirdParty\assimp\camera.h" />
+    <ClInclude Include="ThirdParty\assimp\cexport.h" />
+    <ClInclude Include="ThirdParty\assimp\cfileio.h" />
+    <ClInclude Include="ThirdParty\assimp\cimport.h" />
+    <ClInclude Include="ThirdParty\assimp\color4.h" />
+    <ClInclude Include="ThirdParty\assimp\Compiler\poppack1.h" />
+    <ClInclude Include="ThirdParty\assimp\Compiler\pstdint.h" />
+    <ClInclude Include="ThirdParty\assimp\Compiler\pushpack1.h" />
+    <ClInclude Include="ThirdParty\assimp\config.h" />
+    <ClInclude Include="ThirdParty\assimp\CreateAnimMesh.h" />
+    <ClInclude Include="ThirdParty\assimp\DefaultIOStream.h" />
+    <ClInclude Include="ThirdParty\assimp\DefaultIOSystem.h" />
+    <ClInclude Include="ThirdParty\assimp\DefaultLogger.hpp" />
+    <ClInclude Include="ThirdParty\assimp\Defines.h" />
+    <ClInclude Include="ThirdParty\assimp\defs.h" />
+    <ClInclude Include="ThirdParty\assimp\Exceptional.h" />
+    <ClInclude Include="ThirdParty\assimp\Exporter.hpp" />
+    <ClInclude Include="ThirdParty\assimp\fast_atof.h" />
+    <ClInclude Include="ThirdParty\assimp\GenericProperty.h" />
+    <ClInclude Include="ThirdParty\assimp\Hash.h" />
+    <ClInclude Include="ThirdParty\assimp\Importer.hpp" />
+    <ClInclude Include="ThirdParty\assimp\importerdesc.h" />
+    <ClInclude Include="ThirdParty\assimp\IOStream.hpp" />
+    <ClInclude Include="ThirdParty\assimp\IOStreamBuffer.h" />
+    <ClInclude Include="ThirdParty\assimp\IOSystem.hpp" />
+    <ClInclude Include="ThirdParty\assimp\irrXMLWrapper.h" />
+    <ClInclude Include="ThirdParty\assimp\light.h" />
+    <ClInclude Include="ThirdParty\assimp\LineSplitter.h" />
+    <ClInclude Include="ThirdParty\assimp\LogAux.h" />
+    <ClInclude Include="ThirdParty\assimp\Logger.hpp" />
+    <ClInclude Include="ThirdParty\assimp\LogStream.hpp" />
+    <ClInclude Include="ThirdParty\assimp\Macros.h" />
+    <ClInclude Include="ThirdParty\assimp\material.h" />
+    <ClInclude Include="ThirdParty\assimp\MathFunctions.h" />
+    <ClInclude Include="ThirdParty\assimp\matrix3x3.h" />
+    <ClInclude Include="ThirdParty\assimp\matrix4x4.h" />
+    <ClInclude Include="ThirdParty\assimp\MemoryIOWrapper.h" />
+    <ClInclude Include="ThirdParty\assimp\mesh.h" />
+    <ClInclude Include="ThirdParty\assimp\metadata.h" />
+    <ClInclude Include="ThirdParty\assimp\NullLogger.hpp" />
+    <ClInclude Include="ThirdParty\assimp\ParsingUtils.h" />
+    <ClInclude Include="ThirdParty\assimp\pbrmaterial.h" />
+    <ClInclude Include="ThirdParty\assimp\port\AndroidJNI\AndroidJNIIOSystem.h" />
+    <ClInclude Include="ThirdParty\assimp\postprocess.h" />
+    <ClInclude Include="ThirdParty\assimp\Profiler.h" />
+    <ClInclude Include="ThirdParty\assimp\ProgressHandler.hpp" />
+    <ClInclude Include="ThirdParty\assimp\qnan.h" />
+    <ClInclude Include="ThirdParty\assimp\quaternion.h" />
+    <ClInclude Include="ThirdParty\assimp\RemoveComments.h" />
+    <ClInclude Include="ThirdParty\assimp\scene.h" />
+    <ClInclude Include="ThirdParty\assimp\SceneCombiner.h" />
+    <ClInclude Include="ThirdParty\assimp\SGSpatialSort.h" />
+    <ClInclude Include="ThirdParty\assimp\SkeletonMeshBuilder.h" />
+    <ClInclude Include="ThirdParty\assimp\SmoothingGroups.h" />
+    <ClInclude Include="ThirdParty\assimp\SpatialSort.h" />
+    <ClInclude Include="ThirdParty\assimp\StandardShapes.h" />
+    <ClInclude Include="ThirdParty\assimp\StreamReader.h" />
+    <ClInclude Include="ThirdParty\assimp\StreamWriter.h" />
+    <ClInclude Include="ThirdParty\assimp\StringComparison.h" />
+    <ClInclude Include="ThirdParty\assimp\StringUtils.h" />
+    <ClInclude Include="ThirdParty\assimp\Subdivision.h" />
+    <ClInclude Include="ThirdParty\assimp\texture.h" />
+    <ClInclude Include="ThirdParty\assimp\TinyFormatter.h" />
+    <ClInclude Include="ThirdParty\assimp\types.h" />
+    <ClInclude Include="ThirdParty\assimp\vector2.h" />
+    <ClInclude Include="ThirdParty\assimp\vector3.h" />
+    <ClInclude Include="ThirdParty\assimp\version.h" />
+    <ClInclude Include="ThirdParty\assimp\Vertex.h" />
+    <ClInclude Include="ThirdParty\assimp\XMLTools.h" />
+    <ClInclude Include="ThirdParty\assimp\ZipArchiveIOSystem.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="Shader\gpass_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shader\gpass_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\Sponza\sponza.mtl" />
+    <None Include="Model\Sponza\textures\Thumbs.db" />
+    <None Include="ThirdParty\assimp\color4.inl" />
+    <None Include="ThirdParty\assimp\config.h.in" />
+    <None Include="ThirdParty\assimp\material.inl" />
+    <None Include="ThirdParty\assimp\matrix3x3.inl" />
+    <None Include="ThirdParty\assimp\matrix4x4.inl" />
+    <None Include="ThirdParty\assimp\quaternion.inl" />
+    <None Include="ThirdParty\assimp\SmoothingGroups.inl" />
+    <None Include="ThirdParty\assimp\vector2.inl" />
+    <None Include="ThirdParty\assimp\vector3.inl" />
+    <CopyFileToFolders Include="ThirdParty\DLLs\assimp-vc142-mt.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="ThirdParty\DLLs\zlib.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Model\Sponza\textures\background.tga" />
+    <Image Include="Model\Sponza\textures\background_ddn.tga" />
+    <Image Include="Model\Sponza\textures\chain_texture.tga" />
+    <Image Include="Model\Sponza\textures\chain_texture_ddn.tga" />
+    <Image Include="Model\Sponza\textures\lion.tga" />
+    <Image Include="Model\Sponza\textures\lion2_ddn.tga" />
+    <Image Include="Model\Sponza\textures\lion_ddn.tga" />
+    <Image Include="Model\Sponza\textures\spnza_bricks_a_ddn.tga" />
+    <Image Include="Model\Sponza\textures\spnza_bricks_a_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_arch_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_arch_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_ceiling_a_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_ceiling_a_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_column_a_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_column_a_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_column_b_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_column_b_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_column_c_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_column_c_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_curtain_blue_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_curtain_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_curtain_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_curtain_green_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_details_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_details_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_fabric_blue_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_fabric_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_fabric_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_fabric_green_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_flagpole_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_flagpole_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_floor_a_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_floor_a_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_roof_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_roof_diff.tga" />
+    <Image Include="Model\Sponza\textures\sponza_thorn_ddn.tga" />
+    <Image Include="Model\Sponza\textures\sponza_thorn_diff.tga" />
+    <Image Include="Model\Sponza\textures\vase_ddn.tga" />
+    <Image Include="Model\Sponza\textures\vase_dif.tga" />
+    <Image Include="Model\Sponza\textures\vase_hanging.tga" />
+    <Image Include="Model\Sponza\textures\vase_hanging_ddn.tga" />
+    <Image Include="Model\Sponza\textures\vase_plant.tga" />
+    <Image Include="Model\Sponza\textures\vase_round.tga" />
+    <Image Include="Model\Sponza\textures\vase_round_ddn.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Model\Sponza\sponza.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
