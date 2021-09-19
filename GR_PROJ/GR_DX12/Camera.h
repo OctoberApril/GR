@@ -17,7 +17,7 @@ public:
 	void LookAtLH(glm::vec3 eye, glm::vec3 center, glm::vec3 up);
 	void PerspectiveLH(float fov, float aspect, float nearPlane,float farPlane);
 	void OrthoLH(float left, float right, float bottom, float top, float _near, float _far);
-	glm::mat4 GetVPMatrix(bool useOrtho) const;
+
 	glm::mat4 GetViewMatrix() const;
 	glm::mat4 GetPerspectiveMatrix(bool useOrtho = false) const;
 	

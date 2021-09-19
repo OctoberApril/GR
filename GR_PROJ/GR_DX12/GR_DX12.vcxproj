@@ -147,25 +147,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GPass.cpp" />
     <ClCompile Include="Graphics.cpp" />
+    <ClCompile Include="HObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Win32_Message.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="float2.h" />
     <ClInclude Include="float3.h" />
     <ClInclude Include="float4.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="GPass.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Helper.h" />
+    <ClInclude Include="HObject.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="InterfaceID.h" />
     <ClInclude Include="KeyCode.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Pass.h" />
+    <ClInclude Include="SharedPtr.h" />
     <ClInclude Include="ThirdParty\assimp\aabb.h" />
     <ClInclude Include="ThirdParty\assimp\ai_assert.h" />
     <ClInclude Include="ThirdParty\assimp\anim.h" />
@@ -243,6 +252,7 @@
     <ClInclude Include="ThirdParty\assimp\Vertex.h" />
     <ClInclude Include="ThirdParty\assimp\XMLTools.h" />
     <ClInclude Include="ThirdParty\assimp\ZipArchiveIOSystem.h" />
+    <ClInclude Include="Transform.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Shader\gpass_ps.hlsl">

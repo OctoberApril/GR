@@ -229,16 +229,7 @@ void GPass::Draw(ComPtr<IDXGISwapChain> _swapChain,ComPtr<ID3D12Device> _device,
 	WaitForSingleObject(m_SyncEvent, INFINITE);
 	m_Fence->Signal(0);
 
-
-	//glm::mat4 rotateMat;
-	//rotateMat = glm::rotate(glm::mat4(), 90.0f, glm::vec3(0, 1.0f, 0));
-	//glm::mat4 glmView = glm::lookAtLH(glm::vec<3,float>(-1361, 664,14), glm::vec<3, float>(0, 0, 0), glm::vec<3, float>(0, 1, 0));
-	//glm::mat4 glmProjective = glm::orthoLH(-100.0f, 100.0f, -100.0f, 100.0f, 0.3f, 10000.0f);
-	//glm::mat4 vp =  glmView * glmProjective;
-
 	camera->Update();
-
-
 
 	float model2world[16] = { 1,0,0,583.1f, 0,1,0,-754, 0,0,1,-432, 0,0,0,1 };
 	m_CommandAllocator->Reset();
@@ -260,7 +251,7 @@ void GPass::Draw(ComPtr<IDXGISwapChain> _swapChain,ComPtr<ID3D12Device> _device,
 	m_CommandList->SetPipelineState(m_PipelineState.Get());
 	m_CommandList->SetGraphicsRootSignature(m_RootSignature.Get());
 	m_CommandList->SetGraphicsRoot32BitConstants(0, 16, glm::value_ptr((camera->GetViewMatrix())), 0);
-	m_CommandList->SetGraphicsRoot32BitConstants(0, 16, glm::value_ptr((camera->GetPerspectiveMatrix())), 16);
+	m_CommandList->SetGraphicsRoot32BitConstants(0, 16, glm::value_ptr((camera->GetPerspectiveMatrix(false))), 16);
 
 	m_CommandList->IASetVertexBuffers(0, 1, &m_VertexBufferView);
 	m_CommandList->IASetIndexBuffer(&m_IndexBufferView);

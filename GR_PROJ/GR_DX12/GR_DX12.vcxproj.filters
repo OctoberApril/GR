@@ -52,6 +52,12 @@
     <Filter Include="Math\src">
       <UniqueIdentifier>{2d4336dc-23ed-451d-8fee-958078f44a07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Scene">
+      <UniqueIdentifier>{75c5c665-778a-4d2d-a66e-7fad26ba928c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Scene">
+      <UniqueIdentifier>{30728a4d-01a6-4151-876d-2703d2d3818b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win32_Message.cpp">
@@ -71,6 +77,18 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="HObject.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>源文件\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -340,6 +358,24 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="HObject.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="InterfaceID.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedPtr.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>头文件\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
