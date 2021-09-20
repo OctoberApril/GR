@@ -58,12 +58,28 @@ public:
 		return *this;
 	}
 
-	T* operator->()
+	SharedPtr<T>& operator=(T* rawPtr)
+	{
+		if (m_Ptr == rawPtr) return *this;
+
+		Release();
+		m_Ptr = rawPtr;
+		AddRef();
+
+		return *this;
+	}
+
+	bool operator==(T* rawPtr) const
+	{
+		return m_Ptr == rawPtr;
+	}
+
+	T* operator->() const
 	{
 		return m_Ptr;
 	}
 
-	T& operator*()
+	T& operator*() const
 	{
 		return *m_Ptr;
 	}
@@ -100,6 +116,11 @@ public:
 		return m_Ptr;
 	}
 
+	T** GetAddress() const
+	{
+		return &m_Ptr;
+	}
+	
 	int  GetRefCount() const
 	{
 		return m_Ptr->GetRefCount();

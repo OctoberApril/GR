@@ -27,4 +27,10 @@ void HObject::QueryInterface(const InterfaceID& iid, HObject** object)
 	}
 }
 
+InterfaceID HObject::GetIID()
+{
+	return IID_OBJECT;
+}
+
+
 

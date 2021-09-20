@@ -154,6 +154,7 @@
     <ClCompile Include="HObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Win32_Message.cpp" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="KeyCode.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Pass.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SharedPtr.h" />
     <ClInclude Include="ThirdParty\assimp\aabb.h" />
     <ClInclude Include="ThirdParty\assimp\ai_assert.h" />

@@ -1,5 +1,6 @@
 #pragma once
 #include "InterfaceID.h"
+#include "SharedPtr.h"
 
 static const InterfaceID IID_OBJECT = { 0x00000000,0x0000,0x0000 ,{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00} };
 
@@ -46,9 +47,13 @@ public:
 	HObject& operator=(HObject&&) = delete;
 
 	virtual void QueryInterface(const InterfaceID& iid, HObject** object);
+	
+	static InterfaceID GetIID();
 
 protected:
-
+	template<typename T>
+	friend class SharedPtr;
+	
 	void AddRef();
 	void Release();
 	int  GetRefCount();

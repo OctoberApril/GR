@@ -90,6 +90,9 @@
     <ClCompile Include="Component.cpp">
       <Filter>源文件\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KeyCode.h">
@@ -375,6 +378,9 @@
       <Filter>头文件\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
   </ItemGroup>
