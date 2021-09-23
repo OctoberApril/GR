@@ -15,17 +15,17 @@ public:
 public:
 	Transform(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::quat rotation = glm::identity<glm::quat>(),
-		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f),SharedPtr<Transform> parent = Scene::Default->GetRootTransform())
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f),GameObject* go = nullptr,Transform* parent = Scene::Default->GetRootTransform())
 		:m_Position(position), m_Rotation(rotation), m_Scale(scale),m_Parent(parent)
-	{}
+	{
+		//父类赋值
+		m_pTransform = this;
+		m_pGameObject = go;
+	}
 
-	~Transform() = default;
-
-	Transform(const Transform&) = delete;
-	Transform(Transform&&) = delete;
-	Transform& operator=(const Transform&) = delete;
-	Transform& operator=(Transform&&) = delete;
-
+	~Transform() override = default;
+	static InterfaceID GetIID();
+	
 	glm::mat4 GetLocalToWorldMatrix() const;
 	glm::mat4 GetWorldToLocalMatrix() const;
 
@@ -40,12 +40,12 @@ public:
 	void SetScale(float x, float y, float z);
 	void SetScale(glm::vec3);
 
-	SharedPtr<Transform> Parent() const;
-	void SetParent(const SharedPtr<Transform>& parent);
+	Transform* Parent() const;
+	void SetParent(Transform* parent);
 
-	SharedPtr<Transform> GetChild(int index) const;
+	Transform* GetChild(int index) const;
 	int GetChildCount() const;
-	void AddChild(const SharedPtr<Transform>& other);
+	void AddChild(Transform* other);
 	//删除Component 使用GameObject中的方法删除
 
 private:
@@ -53,7 +53,7 @@ private:
 	glm::quat m_Rotation;
 	glm::vec3 m_Scale;
 
-	SharedPtr<Transform> m_Parent;
+	Transform* m_Parent;
 	std::vector<SharedPtr<Transform>> m_Children;
 };
 

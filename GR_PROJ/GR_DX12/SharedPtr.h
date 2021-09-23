@@ -84,7 +84,7 @@ public:
 		return *m_Ptr;
 	}
 
-	operator T* ()
+	operator T* () const
 	{
 		return m_Ptr;
 	}

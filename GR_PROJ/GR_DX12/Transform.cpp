@@ -1,7 +1,13 @@
+#include "SharedPtr.h"
 #include "Transform.h"
 
 #include <glm/gtx/quaternion.hpp>
 
+
+InterfaceID Transform::GetIID()
+{
+	return IID_TRANSFORM;
+}
 
 glm::vec3 Transform::GetPosition() const
 {
@@ -43,17 +49,17 @@ void Transform::SetScale(glm::vec3 scale)
 	m_Scale = scale;
 }
 
-SharedPtr<Transform> Transform::Parent() const
+Transform* Transform::Parent() const
 {
 	return m_Parent;
 }
 
-void Transform::SetParent(const SharedPtr<Transform>& parent)
+void Transform::SetParent(Transform* parent)
 {
 	m_Parent = parent;
 }
 
-SharedPtr<Transform> Transform::GetChild(int index) const
+Transform* Transform::GetChild(int index) const
 {
 	if (index >= m_Children.size() || index < 0) throw std::exception("get child index > children size() ");
 	return m_Children[index];
@@ -64,9 +70,9 @@ int Transform::GetChildCount() const
 	return m_Children.size();
 }
 
-void Transform::AddChild(const SharedPtr<Transform>& other)
+void Transform::AddChild(Transform* other)
 {
-	m_Children.push_back(other);
+	m_Children.emplace_back(other);
 }
 
 
@@ -77,7 +83,10 @@ glm::mat4 Transform::GetLocalToWorldMatrix() const
 	auto T = glm::translate(glm::mat4(1), m_Position);
 
 	glm::mat4 TRS = S * R * T;
-	return m_Parent == nullptr ? m_Parent->GetLocalToWorldMatrix() * TRS : TRS;
+	if (m_Parent == nullptr)
+		return m_Parent->GetLocalToWorldMatrix() * TRS;
+	else
+		return TRS;
 }
 
 glm::mat4 Transform::GetWorldToLocalMatrix() const

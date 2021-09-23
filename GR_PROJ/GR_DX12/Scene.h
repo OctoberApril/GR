@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-
 #include "HObject.h"
 class Transform;
 
@@ -13,22 +12,19 @@ public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_SCENE, HObject)
 public:
 	Scene(std::string scene_name = "");
-	Scene(const Scene&) = delete;
-	Scene(Scene&&) = delete;
-	Scene& operator=(const Scene&) = delete;
-	Scene& operator=(Scene&&) = delete;
-	
-	~Scene() = default;
+	~Scene();
 
-	SharedPtr<Transform> GetRootTransform() const;
+	Transform* GetRootTransform() const;
+
+	static InterfaceID GetIID();
 
 public:
-	static SharedPtr<Scene> Default;
+	static Scene* Default;
 private:
 
 	std::string m_SceneName;
 
-	SharedPtr<Transform> m_RootTransform;
+	Transform* m_pRootTransform;
 };
 
 

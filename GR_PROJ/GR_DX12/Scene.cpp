@@ -1,17 +1,26 @@
 #include "Scene.h"
 #include "Transform.h"
 
-SharedPtr<Scene> Scene::Default(new Scene("default scene"));
+Scene* Scene::Default(new Scene("default scene"));
 
+InterfaceID Scene::GetIID()
+{
+	return IID_SCENE;
+}
+
+Scene::~Scene()
+{
+	if (m_pRootTransform != nullptr) delete m_pRootTransform;
+}
 
 Scene::Scene(std::string scene_name) :m_SceneName(scene_name)
 {
-	m_RootTransform = new Transform();
+	m_pRootTransform = new Transform();
 }
 
-SharedPtr<Transform> Scene::GetRootTransform() const
+Transform* Scene::GetRootTransform() const
 {
-	return m_RootTransform;
+	return m_pRootTransform;
 }
 
 

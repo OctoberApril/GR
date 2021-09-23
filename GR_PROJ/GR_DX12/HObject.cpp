@@ -1,4 +1,12 @@
+#include <exception>
 #include "HObject.h"
+#include <cassert>
+
+
+HObject::~HObject()
+{
+	assert(m_RefCount == 0);
+}
 
 
 void HObject::AddRef()
@@ -9,6 +17,7 @@ void HObject::AddRef()
 void HObject::Release()
 {
 	--m_RefCount;
+	if (m_RefCount == 0) delete this;
 }
 
 int HObject::GetRefCount()

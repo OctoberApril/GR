@@ -383,6 +383,9 @@
     <ClInclude Include="Scene.h">
       <Filter>头文件\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Noncopy.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Model\Sponza\sponza.mtl">
