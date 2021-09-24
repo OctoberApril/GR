@@ -337,7 +337,7 @@ void GPass::CreateDSV(ComPtr<ID3D12Device> _device)
 
 	ThrowIfFailed(_device->CreateCommittedResource(&dsvProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc,D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue, IID_PPV_ARGS(m_DsvResource.GetAddressOf())));
 
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvViewDesc = {};
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvViewDesc = {}; 
 	dsvViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	dsvViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	dsvViewDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH;

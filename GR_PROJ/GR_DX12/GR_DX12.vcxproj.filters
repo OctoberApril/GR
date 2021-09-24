@@ -58,6 +58,18 @@
     <Filter Include="源文件\Scene">
       <UniqueIdentifier>{30728a4d-01a6-4151-876d-2703d2d3818b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Renderer">
+      <UniqueIdentifier>{4654ff51-d15e-4372-aace-11d46e268935}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Renderer">
+      <UniqueIdentifier>{33c441af-4f75-4e26-9b1b-e06b489c8c6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Shader">
+      <UniqueIdentifier>{6cf5c61f-efc2-415b-947e-6cd72e79e984}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Shader">
+      <UniqueIdentifier>{a1a83fa0-a2e0-48b0-8e1b-76e5e33fdf5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win32_Message.cpp">
@@ -92,6 +104,27 @@
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ThirdCamera.cpp">
+      <Filter>源文件\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
+      <Filter>源文件\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>源文件\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshRenderer.cpp">
+      <Filter>源文件\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>源文件\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>源文件\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="HPass.cpp">
+      <Filter>源文件\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -385,6 +418,27 @@
     </ClInclude>
     <ClInclude Include="Noncopy.h">
       <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ThirdCamera.h">
+      <Filter>头文件\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>头文件\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>头文件\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshRenderer.h">
+      <Filter>头文件\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>头文件\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>头文件\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="HPass.h">
+      <Filter>头文件\Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

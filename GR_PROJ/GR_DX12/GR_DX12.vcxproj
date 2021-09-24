@@ -148,13 +148,20 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GPass.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="HObject.cpp" />
+    <ClCompile Include="HPass.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ThirdCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Win32_Message.cpp" />
   </ItemGroup>
@@ -162,6 +169,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="Drawable.h" />
     <ClInclude Include="float2.h" />
     <ClInclude Include="float3.h" />
     <ClInclude Include="float4.h" />
@@ -170,14 +178,20 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="HObject.h" />
+    <ClInclude Include="HPass.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InterfaceID.h" />
     <ClInclude Include="KeyCode.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Noncopy.h" />
     <ClInclude Include="Pass.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SharedPtr.h" />
+    <ClInclude Include="ThirdCamera.h" />
     <ClInclude Include="ThirdParty\assimp\aabb.h" />
     <ClInclude Include="ThirdParty\assimp\ai_assert.h" />
     <ClInclude Include="ThirdParty\assimp\anim.h" />
