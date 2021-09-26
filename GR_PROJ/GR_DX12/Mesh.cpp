@@ -6,7 +6,7 @@ void Mesh::SetVectices(std::vector<glm::vec3> vertices)
 	m_Vertices = vertices;
 }
 
-void Mesh::SetColors(std::vector<glm::vec3> colors)
+void Mesh::SetColors(std::vector<glm::vec4> colors)
 {
 	m_Colors = colors;
 }
@@ -31,7 +31,7 @@ std::vector<glm::vec3> Mesh::GetVertices() const
 	return m_Vertices;
 }
 
-std::vector<glm::vec3> Mesh::GetColors() const
+std::vector<glm::vec4> Mesh::GetColors() const
 {
 	return m_Colors;
 }
