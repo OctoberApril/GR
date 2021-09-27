@@ -81,7 +81,8 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>intermidiate\$(Platform)\$(Configuration)\</IntDir>
-    <LibraryPath>D:\OtherProjects\test\ConsoleApp1\Win32_Message\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

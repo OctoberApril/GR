@@ -13,9 +13,9 @@ class Transform : public Component
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_TRANSFORM, Component)
 public:
-	Transform(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+	Transform(GameObject* go = nullptr, Transform* parent = Scene::Default->GetRootTransform(), glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::quat rotation = glm::identity<glm::quat>(),
-		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f),GameObject* go = nullptr,Transform* parent = Scene::Default->GetRootTransform())
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f))
 		:m_Position(position), m_Rotation(rotation), m_Scale(scale),m_Parent(parent)
 	{
 		//父类赋值

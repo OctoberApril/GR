@@ -136,7 +136,7 @@ void GPass::Initialize(ComPtr<ID3D12Device> _device)
 
 	//Create Fence & Event to sync 	
 	_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(m_Fence.GetAddressOf()));
-	m_SyncEvent = CreateEvent(nullptr, false, true, nullptr);
+	m_SyncEvent = CreateEvent(nullptr, false, true, nullptr);	
 }
 
 static uint32_t numIndices;

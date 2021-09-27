@@ -8,7 +8,7 @@ InterfaceID GameObject::GetIID()
 }
 
 
-GameObject::GameObject() :m_pTransform(new Transform(glm::vec3(0), glm::identity<glm::quat>(), glm::vec3(1), this))
+GameObject::GameObject() :m_pTransform(new Transform(this))
 {
 
 }

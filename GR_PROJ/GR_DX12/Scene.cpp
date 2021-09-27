@@ -15,7 +15,7 @@ Scene::~Scene()
 
 Scene::Scene(std::string scene_name) :m_SceneName(scene_name)
 {
-	m_pRootTransform = new Transform();
+	m_pRootTransform = new Transform(nullptr,nullptr);
 }
 
 Transform* Scene::GetRootTransform() const
