@@ -1,9 +1,25 @@
-#include <iostream>
-
 #include "Graphics.h"
+
+#include <iostream>
+#include <cassert>
+#include "Helper.h"
+
 
 extern int g_iWidth;
 extern int g_iHeight;
+
+DX12Graphics* DX12Graphics::Instance = nullptr;
+
+DX12Graphics::DX12Graphics()
+{
+	assert(Instance == nullptr);
+	Instance = this;
+}
+
+DX12Graphics::~DX12Graphics()
+{
+	Instance = nullptr;
+}
 
 
 bool DX12Graphics::Initialize()
@@ -37,7 +53,7 @@ bool DX12Graphics::Initialize()
 				}
 			}
 		}
-	
+
 		ThrowIfFailed(D3D12CreateDevice(dxgiAdapter4.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(m_Device.GetAddressOf())));
 
 		D3D12_COMMAND_QUEUE_DESC commandQueueDesc = {};
@@ -71,9 +87,9 @@ bool DX12Graphics::Initialize()
 		descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		descriptorHeapDesc.NumDescriptors = 2;
 		ThrowIfFailed(m_Device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(m_DescriptorHeap.GetAddressOf())));
-		
+
 		//RTV
-		for(int i = 0;i < swapChainDesc.BufferCount;i++)
+		for (int i = 0; i < swapChainDesc.BufferCount; i++)
 		{
 			ComPtr<ID3D12Resource> backBuffer;
 			m_SwapChain->GetBuffer(i, IID_PPV_ARGS(backBuffer.GetAddressOf()));
@@ -81,12 +97,12 @@ bool DX12Graphics::Initialize()
 			handle.ptr = m_DescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr + i * m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 			m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, handle);
 		}
-				
+
 
 #if _DEBUG
 
 		ComPtr<ID3D12InfoQueue> infoQueue;
-		if(SUCCEEDED(m_Device.As(&infoQueue)))
+		if (SUCCEEDED(m_Device.As(&infoQueue)))
 		{
 			infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 			infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
@@ -105,10 +121,10 @@ bool DX12Graphics::Initialize()
 			filter.DenyList.pIDList = ids;
 			filter.DenyList.NumSeverities = 1;
 			filter.DenyList.pSeverityList = severities;
-			
+
 			ThrowIfFailed(infoQueue->PushRetrievalFilter(&filter));
 		}
-		
+
 #endif
 
 		m_Gpass = std::make_shared<GPass>();
@@ -124,5 +140,10 @@ bool DX12Graphics::Initialize()
 
 void DX12Graphics::Update()
 {
-	m_Gpass->Draw(m_SwapChain,m_Device,m_GraphicsCommandQueue,m_DescriptorHeap);
+	m_Gpass->Draw(m_SwapChain, m_Device, m_GraphicsCommandQueue, m_DescriptorHeap);
+}
+
+ID3D12Device* DX12Graphics::GetDevice() const
+{
+	return m_Device.Get();
 }

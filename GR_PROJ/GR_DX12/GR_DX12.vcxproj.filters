@@ -70,6 +70,12 @@
     <Filter Include="源文件\Shader">
       <UniqueIdentifier>{a1a83fa0-a2e0-48b0-8e1b-76e5e33fdf5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Core">
+      <UniqueIdentifier>{df562d19-6f23-4365-95c4-41c8752fdce0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Core">
+      <UniqueIdentifier>{3fca7e25-bf93-4621-bf7c-a5b1ea381e1d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Win32_Message.cpp">
@@ -125,6 +131,12 @@
     </ClCompile>
     <ClCompile Include="HPass.cpp">
       <Filter>源文件\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorAllocator.cpp">
+      <Filter>源文件\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="DescriptorAllocationPage.cpp">
+      <Filter>源文件\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -439,6 +451,15 @@
     </ClInclude>
     <ClInclude Include="HPass.h">
       <Filter>头文件\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorAllocator.h">
+      <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorAllocationPage.h">
+      <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorAllocation.h">
+      <Filter>头文件\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

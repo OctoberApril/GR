@@ -32,7 +32,7 @@ public:
 	void SetDepthStencilStatus(CD3DX12_DEPTH_STENCIL_DESC depthStencilDesc = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT));
 	D3D12_DEPTH_STENCIL_DESC GetDepthStencilStatus() const;
 
-	ComPtr<ID3D12PipelineState> GetGraphicsPSO(ID3D12Device* device) const;
+	ComPtr<ID3D12PipelineState> GetGraphicsPSO(ID3D12Device* device);
 	void SetRootSignature(ID3D12RootSignature* rootSignaturePtr);
 
 private:

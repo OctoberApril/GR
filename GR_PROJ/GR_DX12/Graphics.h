@@ -1,11 +1,10 @@
 #pragma once
-#include <Windows.h>
-#include <d3d12.h>
-#include <wrl/client.h>
-#include <dxgi1_6.h>
-
-#include "Helper.h"
 #include "GPass.h"
+#include <d3d12.h>
+#include <wrl.h>
+#include <dxgi1_6.h>
+#include <memory>
+
 
 class DX12Graphics
 {
@@ -13,17 +12,23 @@ class DX12Graphics
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-	DX12Graphics() = default;
+	DX12Graphics();
+	~DX12Graphics();
 	DX12Graphics(const DX12Graphics&) = delete;
 	DX12Graphics(DX12Graphics&&) = delete;
 
 	DX12Graphics& operator=(const DX12Graphics&) = delete;
+	DX12Graphics& operator=(DX12Graphics&&) = delete;
 
 	bool Initialize();
 
 	void Update();
 
 	ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() { return m_DescriptorHeap; }
+
+	ID3D12Device* GetDevice() const;
+
+	static DX12Graphics* Instance;
 
 private:
 		

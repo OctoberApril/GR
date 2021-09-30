@@ -1,7 +1,8 @@
-#include <d3dcompiler.h>
-#include <dxgi1_6.h>
-
+#define NOMINMAX
 #include "GPass.h"
+
+#include <d3dcompiler.h>
+
 #include "Helper.h"
 #include "d3dx12.h"
 #include "Model.h"
@@ -9,11 +10,10 @@
 
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-extern int g_iHeight;
 extern int g_iWidth;
+extern int g_iHeight;
 
 static Camera* camera = nullptr;
 

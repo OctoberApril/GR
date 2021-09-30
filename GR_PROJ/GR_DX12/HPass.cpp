@@ -63,7 +63,7 @@ void HPass::SetRootSignature(ID3D12RootSignature* rootSignaturePtr)
 }
 
 
-Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* device) const
+Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* device)
 {
 	assert(m_RootSignature != nullptr);
 	
@@ -73,14 +73,14 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 	ComPtr<ID3DBlob> vsShaderBlob;
 	ComPtr<ID3DBlob> psShaderBlob;
 	
-	HRESULT hr = D3DCompileFromFile(m_VSShaderPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, vsShaderBlob.GetAddressOf(), errorMsg.GetAddressOf());
+	HRESULT hr = D3DCompileFromFile(m_VSShaderPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, vsShaderBlob.GetAddressOf(), errorMsg.GetAddressOf());
 	if (errorMsg != nullptr)
 	{
 		OutputDebugStringA(static_cast<LPCSTR>(errorMsg->GetBufferPointer()));
 	}
 	ThrowIfFailed(hr);
 
-	hr = D3DCompileFromFile(m_PSShaderPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, psShaderBlob.GetAddressOf(), errorMsg.GetAddressOf());
+	hr = D3DCompileFromFile(m_PSShaderPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, psShaderBlob.GetAddressOf(), errorMsg.GetAddressOf());
 	if (errorMsg != nullptr)
 	{
 		OutputDebugStringA(static_cast<LPCSTR>(errorMsg->GetBufferPointer()));
@@ -140,7 +140,51 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 
 	//反射Shader拿到 rootsignature的信息 用于设置
 	//material 给hpass设置 rootsignature
+	ComPtr<ID3D12ShaderReflection> vsReflectInfo,psReflectInfo;	
+	ThrowIfFailed(D3DReflect(vsShaderBlob->GetBufferPointer(), vsShaderBlob->GetBufferSize(), IID_ID3D12ShaderReflection, reinterpret_cast<void**>(vsReflectInfo.GetAddressOf())));
+	ThrowIfFailed(D3DReflect(psShaderBlob->GetBufferPointer(), psShaderBlob->GetBufferSize(), IID_ID3D12ShaderReflection, reinterpret_cast<void**>(psReflectInfo.GetAddressOf())));
+	D3D12_SHADER_DESC vsShaderDesc, psShaderDesc;
+	vsReflectInfo->GetDesc(&vsShaderDesc);
+	psReflectInfo->GetDesc(&psShaderDesc);
 	
+	//constbuffer & srv
+	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	int needBoundCount = vsShaderDesc.BoundResources + psShaderDesc.BoundResources;
+	CD3DX12_ROOT_PARAMETER* rootParams = new CD3DX12_ROOT_PARAMETER[needBoundCount];	
+	rootSignatureDesc.Init(needBoundCount, rootParams, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	int loc = 0;
+	for(int i = 0;i < vsShaderDesc.BoundResources;i++)
+	{
+		D3D12_SHADER_INPUT_BIND_DESC bindDesc = {};
+		vsReflectInfo->GetResourceBindingDesc(i, &bindDesc);
+		
+		if(bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
+		{
+			//rootParams[loc].InitAsConstantBufferView()
+		}
+		else if(bindDesc.Type == D3D_SIT_SAMPLER)
+		{
+			//在相应的DescriptorTable中申请一个此类型的Descriptor
+			//Sampler
+			D3D12_DESCRIPTOR_RANGE descriptorRange = {};
+			descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
+			descriptorRange.NumDescriptors = 1;
+			descriptorRange.BaseShaderRegister = bindDesc.BindPoint;
+			descriptorRange.NumDescriptors = bindDesc.BindCount;
+			descriptorRange.RegisterSpace = bindDesc.Space;
+			descriptorRange.OffsetInDescriptorsFromTableStart = 0;			
+			rootParams[loc].InitAsDescriptorTable(1, &descriptorRange);
+		}
+		else
+		{
+			
+		}
+		loc++;
+	}
+	
+	ComPtr<ID3DBlob> rootSignatureBlob, rootSignatureErrorBlob;
+	ThrowIfFailed(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSignatureBlob.GetAddressOf(), rootSignatureErrorBlob.GetAddressOf()));
+	ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(m_RootSignature.GetAddressOf())));
 	psoDesc.pRootSignature = m_RootSignature.Get();
 
 	ComPtr<ID3D12PipelineState> graphicsPipelineState;
