@@ -1,45 +1,57 @@
-﻿// Win32_Message.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-#define NOMINMAX
-#include <iostream>
-#include <Windows.h>
-
-#include "Graphics.h"
+#include "Win32App.h"
 #include "Input.h"
+#include "Graphics.h"
+#include <iostream>
 
 
-LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
+Win32App* Win32App::_win32App = nullptr;
 
-int g_iWidth = 1600;
-int g_iHeight = 1080;
-
-Input* g_Input = nullptr;
-DX12Graphics* g_Graphics = nullptr;
-
-int main()
+Win32App::Win32App(std::string window_name, int width, int height)
+	:m_WindowTitle(std::move(window_name)),
+	m_Width(width), m_Height(height),
+	m_GraphicsContext(nullptr),
+	m_InputContext(nullptr)
 {
-	WNDCLASSA wndClass = {};
-	wndClass.hCursor = GetCursor();
-	wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wndClass.lpszClassName = "H_DX12";
-	wndClass.style = CS_HREDRAW | CS_VREDRAW;
-	wndClass.lpfnWndProc = WinProc;
+	_win32App = this;
+}
 
-	RegisterClassA(&wndClass);
+bool Win32App::Initialize()
+{
+	try
+	{
+		WNDCLASSA wndClass = {};
+		wndClass.hCursor = GetCursor();
+		wndClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+		wndClass.lpszClassName = "H_DX12";
+		wndClass.style = CS_HREDRAW | CS_VREDRAW;
+		wndClass.lpfnWndProc = WinProc;
 
-	HWND hwnd = CreateWindowA("H_DX12", "Win Message", WS_OVERLAPPEDWINDOW, 300, 300, g_iWidth, g_iHeight, nullptr, nullptr, nullptr, nullptr);
+		RegisterClassA(&wndClass);
 
-	UpdateWindow(hwnd);
-	ShowWindow(hwnd, SW_NORMAL);
+		m_Hwnd = CreateWindowA("H_DX12", m_WindowTitle.c_str(), WS_OVERLAPPEDWINDOW, 300, 300, m_Width, m_Height, nullptr, nullptr, nullptr, nullptr);
+		SetWindowLongPtr(m_Hwnd, GWLP_USERDATA, (LONG)this);
+		m_InputContext = new Input();
+		m_GraphicsContext = new DX12Graphics();
 
-	g_Input = new Input();
-	g_Graphics = new DX12Graphics();
+		UpdateWindow(m_Hwnd);
+		ShowWindow(m_Hwnd, SW_NORMAL);
 
-	if (!g_Graphics->Initialize())
-		std::cout << "Initialize Graphics Failed." << std::endl;
-	else
-		std::cout << "Create D3D12 Device Success" << std::endl;
+		if (!m_GraphicsContext->Initialize())
+		{
+			std::cout << "Initialize Graphics Failed." << std::endl;
+			return false;
+		}
+	}
+	catch (...)
+	{
+		return false;
+	}
+	return true;
+}
 
+
+void Win32App::Update()
+{
 	MSG msg = {};
 	while (msg.message != WM_QUIT)
 	{
@@ -49,17 +61,36 @@ int main()
 			DispatchMessage(&msg);
 		}
 		else
-		{	
-			g_Input->Update();
-			g_Graphics->Update();
+		{
+			m_InputContext->Update();
+			m_GraphicsContext->Update();
 
-			g_Input->GraphicsEndUpdate();
-		}	
+			m_InputContext->GraphicsEndUpdate();
+		}
 	}
 }
 
-LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+Input* Win32App::GetInputContext() const
 {
+	return m_InputContext;
+}
+
+DX12Graphics* Win32App::GetGraphicsContext() const
+{
+	return m_GraphicsContext;
+}
+
+
+LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	if (!_win32App) return DefWindowProcA(hwnd, message, wParam, lParam);
+	auto winPtr = _win32App;
+	/*auto winPtr = (Win32App*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+	if (!winPtr)
+	{
+		return DefWindowProcA(hwnd, message, wParam, lParam);
+	}*/
+
 	switch (message)
 	{
 	case WM_DESTROY:
@@ -86,7 +117,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			scanCode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
 		}
 
-		g_Input->SetKeyStatus((KeyCode::Key)vkeyCode, isPressed);
+		winPtr->m_InputContext->SetKeyStatus((KeyCode::Key)vkeyCode, isPressed);
 
 #if __DEBUG
 		std::cout << "Alt:" << alt << " " << "Control:" << control << " " << "shift:" << shift << std::endl;
@@ -113,9 +144,9 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 
-		g_Input->SetKeyStatus(KeyCode::LButton, lButton);
-		g_Input->SetKeyStatus(KeyCode::RButton, rButton);
-		g_Input->SetKeyStatus(KeyCode::MButton, mButton);
+		winPtr->m_InputContext->SetKeyStatus(KeyCode::LButton, lButton);
+		winPtr->m_InputContext->SetKeyStatus(KeyCode::RButton, rButton);
+		winPtr->m_InputContext->SetKeyStatus(KeyCode::MButton, mButton);
 
 #if __DEBUG
 		std::cout << "LButton:" << lButton << std::endl;
@@ -135,7 +166,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 
-		g_Input->SetMousePosition(x, y);
+		winPtr->m_InputContext->SetMousePosition(x, y);
 
 #if __DEBUG
 		std::cout << "WM_MOUSEMOVE (" << x << "," << y << ")" << std::endl;
@@ -154,7 +185,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 
 		short deleteMove = static_cast<short>(HIWORD(wParam)) / WHEEL_DELTA;
-		g_Input->SetScrollWheelStatus(deleteMove);
+		winPtr->m_InputContext->SetScrollWheelStatus(deleteMove);
 
 #if __DEBUG
 		std::cout << "rotate:" << deleteMove << std::endl;

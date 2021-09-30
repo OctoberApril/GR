@@ -20,7 +20,7 @@ DescriptorAllocationPage::DescriptorAllocationPage(D3D12_DESCRIPTOR_HEAP_TYPE de
 
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-	DescriptorAllocation allocation(cpuHandle, descriptor_num, DESCRIPTOR_INCREMENT_SIZE);
+	DescriptorAllocation allocation(cpuHandle, descriptor_num, DESCRIPTOR_INCREMENT_SIZE, this);
 	allocation.parent = 0;
 	allocation.next = descriptor_num;
 
@@ -38,13 +38,13 @@ DescriptorAllocation DescriptorAllocationPage::Allocate(size_t descriptor_num)
 	auto cur_block = std::find(m_AvaliableBlocks.begin(), m_AvaliableBlocks.end(), descriptor_num);
 	assert(cur_block != m_AvaliableBlocks.end());
 
-	DescriptorAllocation use_block = { cur_block->CPU,descriptor_num,DESCRIPTOR_INCREMENT_SIZE };
+	DescriptorAllocation use_block = { cur_block->CPU,descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
 	use_block.parent = cur_block->parent;
-	use_block.next = use_block.parent + descriptor_num;	
-	
+	use_block.next = use_block.parent + descriptor_num;
+
 	D3D12_CPU_DESCRIPTOR_HANDLE newCpuHandle = cur_block->CPU;
 	newCpuHandle.ptr += descriptor_num * DESCRIPTOR_INCREMENT_SIZE;
-	DescriptorAllocation new_block = { newCpuHandle, cur_block->Length - descriptor_num,DESCRIPTOR_INCREMENT_SIZE };
+	DescriptorAllocation new_block = { newCpuHandle, cur_block->Length - descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
 	new_block.parent = use_block.next;
 	new_block.next = cur_block->next;
 
@@ -76,10 +76,10 @@ void DescriptorAllocationPage::Release(uint64_t frame_num)
 	std::sort(iter->second.begin(), iter->second.end(), [](DescriptorAllocation a, DescriptorAllocation b) {
 		return a.parent < b.parent;
 		});
-	
-	for (auto i = iter->second.begin(),j = i + 1; i != iter->second.end() && j != iter->second.end();)
+
+	for (auto i = iter->second.begin(), j = i + 1; i != iter->second.end() && j != iter->second.end();)
 	{
-		if(i->next == j->parent)
+		if (i->next == j->parent)
 		{
 			i->next = j->next;
 			i->Length += j->Length;
@@ -89,7 +89,6 @@ void DescriptorAllocationPage::Release(uint64_t frame_num)
 		{
 			//不可合并 将当前块压入可用列表 更新当前指针 继续合并
 			m_AvaliableBlocks.emplace(*i);
-			
 			j = i;
 		}
 	}

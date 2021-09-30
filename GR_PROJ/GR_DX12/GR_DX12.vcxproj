@@ -151,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
+    <ClCompile Include="DescriptorAllocation.cpp" />
     <ClCompile Include="DescriptorAllocationPage.cpp" />
     <ClCompile Include="DescriptorAllocator.cpp" />
     <ClCompile Include="Drawable.cpp" />
@@ -160,6 +161,7 @@
     <ClCompile Include="HObject.cpp" />
     <ClCompile Include="HPass.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
@@ -168,7 +170,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ThirdCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
-    <ClCompile Include="Win32_Message.cpp" />
+    <ClCompile Include="Win32App.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -278,6 +280,7 @@
     <ClInclude Include="ThirdParty\assimp\XMLTools.h" />
     <ClInclude Include="ThirdParty\assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="Win32App.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Shader\gpass_ps.hlsl">
