@@ -10,13 +10,13 @@ class HPass;
 class Material : public HObject
 {
 public:
-	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_MATERIAL,HObject)
+	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_MATERIAL, HObject)
 public:
 	Material() = default;
 	template<typename T>  using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 
-private:	
-	ComPtr<HPass> m_HPass;
+private:
+	HPass* m_pHPass;
 };
 

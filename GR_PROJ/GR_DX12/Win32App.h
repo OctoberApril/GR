@@ -2,7 +2,6 @@
 
 #define NOMINMAX
 #include <string>
-#include <utility>
 #include <Windows.h>
 
 class DX12Graphics;
@@ -15,11 +14,13 @@ public:
 
 	bool Initialize();
 	void Update();
+
+	
 	Input* GetInputContext() const;
 	DX12Graphics* GetGraphicsContext() const;
 	
 	static LRESULT CALLBACK WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-
+	static Win32App* Instance;
 private:
 
 	DX12Graphics* m_GraphicsContext;
@@ -29,6 +30,6 @@ private:
 	int m_Height;
 	int m_Width;
 	HWND m_Hwnd;
-	static Win32App* _win32App;
+	
 };
 

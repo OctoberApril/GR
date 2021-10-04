@@ -2,11 +2,34 @@
 #include <d3dcompiler.h>
 
 #include "HPass.h"
+
+#include "Graphics.h"
 #include "Helper.h"
+#include "Win32App.h"
+
+
+HPass::HPass(
+	const wchar_t* vsShaderPath, 
+	const wchar_t* psShaderPath,
+	CD3DX12_BLEND_DESC blend,
+	CD3DX12_RASTERIZER_DESC rasterizer,
+	CD3DX12_DEPTH_STENCIL_DESC depth_stencil
+)
+{
+	assert(vsShaderPath != nullptr && psShaderPath != nullptr);
+	m_VSShaderPath = vsShaderPath;
+	m_PSShaderPath = psShaderPath;
+	
+	m_BlendStatus = blend;
+	m_RasterizerStatus = rasterizer;
+	m_DepthStencilStatus = depth_stencil;
+
+	
+}
 
 
 void HPass::SetVertexShader(const std::wstring& vsPath)
-{	
+{
 	m_VSShaderPath = vsPath;
 }
 
@@ -26,7 +49,7 @@ std::wstring HPass::GetPixelShaderPath() const
 	return m_PSShaderPath;
 }
 
-void HPass::SetBlendStatus(CD3DX12_BLEND_DESC desc)
+void HPass::SetBlendStatus(const CD3DX12_BLEND_DESC desc)
 {
 	m_BlendStatus = desc;
 }
@@ -36,7 +59,7 @@ D3D12_BLEND_DESC HPass::GetBlendStatus() const
 	return m_BlendStatus;
 }
 
-void HPass::SetRasterizerStatus(CD3DX12_RASTERIZER_DESC rasterizerDesc)
+void HPass::SetRasterizerStatus(const CD3DX12_RASTERIZER_DESC rasterizerDesc)
 {
 	m_RasterizerStatus = rasterizerDesc;
 }
@@ -46,7 +69,7 @@ D3D12_RASTERIZER_DESC HPass::GetRasterizerStatus() const
 	return m_RasterizerStatus;
 }
 
-void HPass::SetDepthStencilStatus(CD3DX12_DEPTH_STENCIL_DESC depthStencilDesc)
+void HPass::SetDepthStencilStatus(const CD3DX12_DEPTH_STENCIL_DESC depthStencilDesc)
 {
 	m_DepthStencilStatus = depthStencilDesc;
 }
@@ -62,17 +85,17 @@ void HPass::SetRootSignature(ID3D12RootSignature* rootSignaturePtr)
 	m_RootSignature = rootSignaturePtr;
 }
 
-
-Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* device)
+Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO()
 {
-	assert(m_RootSignature != nullptr);
-	
+	ID3D12Device* device = DX12Graphics::Instance->GetDevice();
+	assert(m_RootSignature != nullptr && device != nullptr);
+
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-	
+
 	ComPtr<ID3DBlob> errorMsg;
 	ComPtr<ID3DBlob> vsShaderBlob;
 	ComPtr<ID3DBlob> psShaderBlob;
-	
+
 	HRESULT hr = D3DCompileFromFile(m_VSShaderPath.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_1", D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION, 0, vsShaderBlob.GetAddressOf(), errorMsg.GetAddressOf());
 	if (errorMsg != nullptr)
 	{
@@ -93,7 +116,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 	psoDesc.BlendState = m_BlendStatus;
 	psoDesc.RasterizerState = m_RasterizerStatus;
 	psoDesc.DepthStencilState = m_DepthStencilStatus;
-	
+
 	psoDesc.SampleMask = 0xffffffff;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	psoDesc.NumRenderTargets = 1;
@@ -113,7 +136,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 	elements[0].SemanticIndex = 0;
 	elements[0].SemanticName = "POSITION";
 	elements[0].InstanceDataStepRate = 0;
-	
+
 	elements[1].AlignedByteOffset = sizeof(float) * 3;
 	elements[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	elements[1].InputSlot = 0;
@@ -121,7 +144,7 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 	elements[1].SemanticIndex = 0;
 	elements[1].SemanticName = "COLOR";
 	elements[1].InstanceDataStepRate = 0;
-	
+
 	elements[2].AlignedByteOffset = sizeof(float) * 7;
 	elements[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	elements[2].InputSlot = 0;
@@ -138,49 +161,141 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 	elements[3].SemanticName = "TEXCOORD";
 	elements[3].InstanceDataStepRate = 0;
 
-	//反射Shader拿到 rootsignature的信息 用于设置
-	//material 给hpass设置 rootsignature
-	ComPtr<ID3D12ShaderReflection> vsReflectInfo,psReflectInfo;	
+
+#pragma region 初始化参数列表使用Shader反射信息 && 填充 D3D12_Root_Parameter
+
+	//反射Shader 创建RootSignature
+	ComPtr<ID3D12ShaderReflection> vsReflectInfo, psReflectInfo;
 	ThrowIfFailed(D3DReflect(vsShaderBlob->GetBufferPointer(), vsShaderBlob->GetBufferSize(), IID_ID3D12ShaderReflection, reinterpret_cast<void**>(vsReflectInfo.GetAddressOf())));
 	ThrowIfFailed(D3DReflect(psShaderBlob->GetBufferPointer(), psShaderBlob->GetBufferSize(), IID_ID3D12ShaderReflection, reinterpret_cast<void**>(psReflectInfo.GetAddressOf())));
 	D3D12_SHADER_DESC vsShaderDesc, psShaderDesc;
 	vsReflectInfo->GetDesc(&vsShaderDesc);
 	psReflectInfo->GetDesc(&psShaderDesc);
+
 	
 	//constbuffer & srv
 	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc;
+	//total_resource_bind = vs_resource_bind + ps_resource_bind
 	int needBoundCount = vsShaderDesc.BoundResources + psShaderDesc.BoundResources;
-	CD3DX12_ROOT_PARAMETER* rootParams = new CD3DX12_ROOT_PARAMETER[needBoundCount];	
+	CD3DX12_ROOT_PARAMETER* rootParams = new CD3DX12_ROOT_PARAMETER[needBoundCount];
 	rootSignatureDesc.Init(needBoundCount, rootParams, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	ReflectionTable vsReflectionTB = { ShaderStage_VS }, psReflectionTB = { ShaderStage_PS};
 	int loc = 0;
-	for(int i = 0;i < vsShaderDesc.BoundResources;i++)
+	for (int i = 0; i < vsShaderDesc.BoundResources; i++)
 	{
-		D3D12_SHADER_INPUT_BIND_DESC bindDesc = {};
-		vsReflectInfo->GetResourceBindingDesc(i, &bindDesc);
+		D3D12_SHADER_INPUT_BIND_DESC inputDesc = {};
+		vsReflectInfo->GetResourceBindingDesc(i, &inputDesc);
 		
-		if(bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
+		D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
+		pRange->NumDescriptors = inputDesc.BindCount;
+		pRange->BaseShaderRegister = inputDesc.BindPoint;
+		pRange->RegisterSpace = inputDesc.Space;
+		pRange->OffsetInDescriptorsFromTableStart = 0;
+
+		switch (inputDesc.Type)
 		{
-			//rootParams[loc].InitAsConstantBufferView()
-		}
-		else if(bindDesc.Type == D3D_SIT_SAMPLER)
+		case D3D_SIT_CBUFFER:
+		case D3D_SIT_TBUFFER:
 		{
-			//在相应的DescriptorTable中申请一个此类型的Descriptor
-			//Sampler
-			D3D12_DESCRIPTOR_RANGE descriptorRange = {};
-			descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
-			descriptorRange.NumDescriptors = 1;
-			descriptorRange.BaseShaderRegister = bindDesc.BindPoint;
-			descriptorRange.NumDescriptors = bindDesc.BindCount;
-			descriptorRange.RegisterSpace = bindDesc.Space;
-			descriptorRange.OffsetInDescriptorsFromTableStart = 0;			
-			rootParams[loc].InitAsDescriptorTable(1, &descriptorRange);
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+			break;
 		}
-		else
+		case D3D_SIT_SAMPLER:
 		{
-			
+			vsReflectionTB.SamplerMap.emplace(inputDesc.Name, ResourceVariableInfo{inputDesc.Name, inputDesc.BindPoint, inputDesc.BindCount});
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
+			break;
 		}
-		loc++;
+		case D3D_SIT_TEXTURE:
+		{
+			vsReflectionTB.Texture2DMap.emplace(inputDesc.Name, ResourceVariableInfo{ inputDesc.Name, inputDesc.BindPoint, inputDesc.BindCount });
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+			break;
+		}
+		default:
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+			break;
+
+		}
+		rootParams[loc++].InitAsDescriptorTable(1, pRange, D3D12_SHADER_VISIBILITY_VERTEX);
 	}
+
+	//添加vsShader Stage中 cb信息
+	for(int i = 0;i < vsShaderDesc.ConstantBuffers;i++)
+	{
+		auto pCbInfo = vsReflectInfo->GetConstantBufferByIndex(i);
+		D3D12_SHADER_BUFFER_DESC bufferDesc = {};
+		pCbInfo->GetDesc(&bufferDesc);
+		for(int j = 0;j < bufferDesc.Variables;j++)
+		{
+			auto pVariableInfo = pCbInfo->GetVariableByIndex(j);
+			D3D12_SHADER_VARIABLE_DESC variableInfo = {};
+			pVariableInfo->GetDesc(&variableInfo);
+
+			vsReflectionTB.ConstantMap.emplace(variableInfo.Name, ShaderVariableInfo{ variableInfo.Name,variableInfo.StartOffset,variableInfo.Size });
+		}
+	}
+	
+
+	for (int i = 0; i < psShaderDesc.BoundResources; i++)
+	{
+		D3D12_SHADER_INPUT_BIND_DESC inputDesc = {};
+		vsReflectInfo->GetResourceBindingDesc(i, &inputDesc);
+
+		D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
+		pRange->NumDescriptors = inputDesc.BindCount;
+		pRange->BaseShaderRegister = inputDesc.BindPoint;
+		pRange->RegisterSpace = inputDesc.Space;
+		pRange->OffsetInDescriptorsFromTableStart = 0;
+
+		switch (inputDesc.Type)
+		{
+		case D3D_SIT_CBUFFER:
+		case D3D_SIT_TBUFFER:
+		{
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+			break;
+		}
+		case D3D_SIT_SAMPLER:
+		{
+			psReflectionTB.SamplerMap.emplace(inputDesc.Name, ResourceVariableInfo{ inputDesc.Name, inputDesc.BindPoint, inputDesc.BindCount });
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
+			break;
+		}
+		case D3D_SIT_TEXTURE:
+		{
+			psReflectionTB.Texture2DMap.emplace(inputDesc.Name, ResourceVariableInfo{ inputDesc.Name, inputDesc.BindPoint, inputDesc.BindCount });
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+			break;
+		}
+		default:
+			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+			break;
+
+		}
+		rootParams[loc++].InitAsDescriptorTable(1, pRange, D3D12_SHADER_VISIBILITY_PIXEL);
+	}
+
+	//添加psShader Stage中 cb信息
+	for (int i = 0; i < psShaderDesc.ConstantBuffers; i++)
+	{
+		auto pCbInfo = psReflectInfo->GetConstantBufferByIndex(i);
+		D3D12_SHADER_BUFFER_DESC bufferDesc = {};
+		pCbInfo->GetDesc(&bufferDesc);
+		for (int j = 0; j < bufferDesc.Variables; j++)
+		{
+			auto pVariableInfo = pCbInfo->GetVariableByIndex(j);
+			D3D12_SHADER_VARIABLE_DESC variableInfo = {};
+			pVariableInfo->GetDesc(&variableInfo);
+
+			psReflectionTB.ConstantMap.emplace(variableInfo.Name, ShaderVariableInfo{ variableInfo.Name,variableInfo.StartOffset,variableInfo.Size });
+		}
+	}
+
+	m_PassReflectTable.emplace(vsReflectionTB);
+	m_PassReflectTable.emplace(psReflectionTB);
+#pragma endregion
 	
 	ComPtr<ID3DBlob> rootSignatureBlob, rootSignatureErrorBlob;
 	ThrowIfFailed(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSignatureBlob.GetAddressOf(), rootSignatureErrorBlob.GetAddressOf()));
@@ -190,6 +305,9 @@ Microsoft::WRL::ComPtr<ID3D12PipelineState> HPass::GetGraphicsPSO(ID3D12Device* 
 	ComPtr<ID3D12PipelineState> graphicsPipelineState;
 	ThrowIfFailed(device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(graphicsPipelineState.GetAddressOf())));
 
+
+
+	
 	return graphicsPipelineState;
 }
 

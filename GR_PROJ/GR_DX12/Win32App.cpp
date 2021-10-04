@@ -1,10 +1,12 @@
 #include "Win32App.h"
+
+#include <cassert>
 #include "Input.h"
 #include "Graphics.h"
 #include <iostream>
 
 
-Win32App* Win32App::_win32App = nullptr;
+Win32App* Win32App::Instance = nullptr;
 
 Win32App::Win32App(std::string window_name, int width, int height)
 	:m_WindowTitle(std::move(window_name)),
@@ -12,7 +14,8 @@ Win32App::Win32App(std::string window_name, int width, int height)
 	m_GraphicsContext(nullptr),
 	m_InputContext(nullptr)
 {
-	_win32App = this;
+	assert(Instance == nullptr);
+	Instance = this;
 }
 
 bool Win32App::Initialize()
@@ -83,13 +86,8 @@ DX12Graphics* Win32App::GetGraphicsContext() const
 
 LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (!_win32App) return DefWindowProcA(hwnd, message, wParam, lParam);
-	auto winPtr = _win32App;
-	/*auto winPtr = (Win32App*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-	if (!winPtr)
-	{
+	if (!Instance) 
 		return DefWindowProcA(hwnd, message, wParam, lParam);
-	}*/
 
 	switch (message)
 	{
@@ -117,7 +115,7 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			scanCode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
 		}
 
-		winPtr->m_InputContext->SetKeyStatus((KeyCode::Key)vkeyCode, isPressed);
+		Instance->m_InputContext->SetKeyStatus((KeyCode::Key)vkeyCode, isPressed);
 
 #if __DEBUG
 		std::cout << "Alt:" << alt << " " << "Control:" << control << " " << "shift:" << shift << std::endl;
@@ -144,9 +142,9 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 
-		winPtr->m_InputContext->SetKeyStatus(KeyCode::LButton, lButton);
-		winPtr->m_InputContext->SetKeyStatus(KeyCode::RButton, rButton);
-		winPtr->m_InputContext->SetKeyStatus(KeyCode::MButton, mButton);
+		Instance->m_InputContext->SetKeyStatus(KeyCode::LButton, lButton);
+		Instance->m_InputContext->SetKeyStatus(KeyCode::RButton, rButton);
+		Instance->m_InputContext->SetKeyStatus(KeyCode::MButton, mButton);
 
 #if __DEBUG
 		std::cout << "LButton:" << lButton << std::endl;
@@ -166,7 +164,7 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 
-		winPtr->m_InputContext->SetMousePosition(x, y);
+		Instance->m_InputContext->SetMousePosition(x, y);
 
 #if __DEBUG
 		std::cout << "WM_MOUSEMOVE (" << x << "," << y << ")" << std::endl;
@@ -185,7 +183,7 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 
 		short deleteMove = static_cast<short>(HIWORD(wParam)) / WHEEL_DELTA;
-		winPtr->m_InputContext->SetScrollWheelStatus(deleteMove);
+		Instance->m_InputContext->SetScrollWheelStatus(deleteMove);
 
 #if __DEBUG
 		std::cout << "rotate:" << deleteMove << std::endl;

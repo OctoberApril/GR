@@ -16,6 +16,4 @@ void main()
 	g_Input = app.GetInputContext();
 	
 	app.Update();
-
-	getchar();
 }
