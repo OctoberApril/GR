@@ -10,28 +10,6 @@
 
 static const InterfaceID IID_HPASS = { 5,0,0,{0,0,0,0,0,0,0,0} };
 
-enum ShaderType
-{
-	UnDefined,
-	ShaderType_Float,
-	ShaderType_Vector3,
-	ShaderType_Vector4,
-	ShaderType_Texture2D,
-	ShaderType_Matrix,
-};
-
-namespace std
-{
-	template<>
-	struct hash<ShaderType>
-	{
-		size_t operator()(const ShaderType type_value) const noexcept
-		{
-			return static_cast<std::size_t>(type_value);
-		}
-	};
-}
-
 
 class HPass : HObject
 {
@@ -63,21 +41,30 @@ public:
 	void SetDepthStencilStatus(CD3DX12_DEPTH_STENCIL_DESC depthStencilDesc);
 	D3D12_DEPTH_STENCIL_DESC GetDepthStencilStatus() const;
 
-	ComPtr<ID3D12PipelineState> GetGraphicsPSO();
-	void SetRootSignature(ID3D12RootSignature* rootSignaturePtr);
+	ID3D12PipelineState* GetGraphicsPSO() const;
+
+private:
+	void RebuildShaderBlob();
+	void RebuildPassReflectionTable();
+	void RebuildRootSignature();
+	void RebuildPipelineStateObject();
 
 private:
 	std::wstring m_VSShaderPath;
 	std::wstring m_PSShaderPath;
 
-	D3D12_INPUT_LAYOUT_DESC m_DefaultInputLayout;
+	ComPtr<ID3DBlob> m_VSBlob;
+	ComPtr<ID3DBlob> m_PSBlob;
+
+	
 
 	D3D12_BLEND_DESC m_BlendStatus;
 	D3D12_RASTERIZER_DESC m_RasterizerStatus;
 	D3D12_DEPTH_STENCIL_DESC m_DepthStencilStatus;
 
 	ComPtr<ID3D12RootSignature> m_RootSignature;
-
+	ComPtr<ID3D12PipelineState> m_PipelineState;
+	
 	std::unordered_set<ReflectionTable, ReflectionTableHash> m_PassReflectTable;
 };
 

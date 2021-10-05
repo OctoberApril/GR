@@ -159,6 +159,12 @@
     <ClCompile Include="ReflectionTable.cpp">
       <Filter>源文件\Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Texture2D.cpp">
+      <Filter>源文件\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="UploadBuffer.cpp">
+      <Filter>源文件\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pass.h">
@@ -487,6 +493,12 @@
     </ClInclude>
     <ClInclude Include="ReflectionTable.h">
       <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture2D.h">
+      <Filter>头文件\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="UploadBuffer.h">
+      <Filter>头文件\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

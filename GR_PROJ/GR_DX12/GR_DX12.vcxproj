@@ -169,8 +169,10 @@
     <ClCompile Include="ReflectionTable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="Texture2D.cpp" />
     <ClCompile Include="ThirdCamera.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="UploadBuffer.cpp" />
     <ClCompile Include="Win32App.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +205,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SharedPtr.h" />
+    <ClInclude Include="Texture2D.h" />
     <ClInclude Include="ThirdCamera.h" />
     <ClInclude Include="ThirdParty\assimp\aabb.h" />
     <ClInclude Include="ThirdParty\assimp\ai_assert.h" />
@@ -282,6 +285,7 @@
     <ClInclude Include="ThirdParty\assimp\XMLTools.h" />
     <ClInclude Include="ThirdParty\assimp\ZipArchiveIOSystem.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="UploadBuffer.h" />
     <ClInclude Include="Win32App.h" />
   </ItemGroup>
   <ItemGroup>

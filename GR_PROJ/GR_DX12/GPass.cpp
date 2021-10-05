@@ -255,6 +255,8 @@ void GPass::Draw(ComPtr<IDXGISwapChain> _swapChain,ComPtr<ID3D12Device> _device,
 
 	m_CommandList->IASetVertexBuffers(0, 1, &m_VertexBufferView);
 	m_CommandList->IASetIndexBuffer(&m_IndexBufferView);
+
+	
 	
 	D3D12_VIEWPORT viewPort = {};
 	viewPort.Width = g_iWidth;
