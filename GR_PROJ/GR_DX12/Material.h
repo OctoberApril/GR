@@ -20,12 +20,14 @@ public:
 	Material(const wchar_t* vsShader, const wchar_t* psShader);
 	~Material();
 
-
+	void SetMatrix(std::string variableName, glm::mat4 matrix);
+	void SetTexture2D(std::string variableName, Texture2D* texture);
 
 private:
-	HPass* m_pHPass;
-
+	
 	std::unordered_map<std::string, glm::mat4> m_MatrixVariableMap;
-	std::unordered_map<std::string, Texture2D> m_Texture2DVariableMap;
+	std::unordered_map<std::string, SharedPtr<Texture2D>> m_Texture2DVariableMap;
+
+	HPass* m_pHPass;
 };
 

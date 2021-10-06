@@ -43,6 +43,8 @@ public:
 
 	ID3D12PipelineState* GetGraphicsPSO() const;
 
+	bool CheckVariableIsValidate(std::string variableName, size_t dataSize = 0) const;
+
 private:
 	void RebuildShaderBlob();
 	void RebuildPassReflectionTable();

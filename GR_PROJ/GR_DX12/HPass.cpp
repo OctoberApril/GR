@@ -321,6 +321,31 @@ ID3D12PipelineState* HPass::GetGraphicsPSO() const
 	return m_PipelineState.Get();
 }
 
+bool HPass::CheckVariableIsValidate(std::string variableName, size_t dataSize) const
+{
+	for(auto p = m_PassReflectTable.begin();p != m_PassReflectTable.end();p++)
+	{
+		auto stageInfo = *p;
+
+		for(auto v = stageInfo.ConstantMap.begin();v != stageInfo.ConstantMap.end();v++)
+		{
+			for(int i = 0;i < v->second.Variables;i++)
+			{
+				if(v->second.SubVariables[i].SubName == variableName)
+				{
+					return dataSize == v->second.SubVariables[i].Size;
+				}
+			}
+		}
+
+		//Sampler和Texture2D对数据的大小没有验证需求		
+		auto t0 = stageInfo.SamplerMap.find(variableName);
+		if (t0 != stageInfo.SamplerMap.end()) return true;
+
+		auto t1 = stageInfo.Texture2DMap.find(variableName);
+		if (t1 != stageInfo.Texture2DMap.end()) return true;
+	}
+}
 
 
 

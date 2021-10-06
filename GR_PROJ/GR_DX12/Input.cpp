@@ -3,10 +3,18 @@
 #include "Input.h"
 #include "assert.h"
 
+Input* Input::Instance = nullptr;
 
 Input::Input()
 {
+	assert(Instance == nullptr);
+	Instance = this;
 	for (int i = 0; i < 255; i++) m_KeyMap[i] = false;
+}
+
+void Input::Initialize()
+{
+	
 }
 
 void Input::Update()
@@ -14,7 +22,7 @@ void Input::Update()
 	
 }
 
-void Input::GraphicsEndUpdate()
+void Input::LateUpdate()
 {
 	m_ScrollWheelSign = 0;
 }

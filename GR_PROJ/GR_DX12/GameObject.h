@@ -1,12 +1,11 @@
 #pragma once
 #include <vector>
 #include "HObject.h"
-
+#include "Component.h"
 
 static const InterfaceID IID_GAMEOBJECT = { 1,0,0,{0,0,0,0,0,0,0,0} };
 
 class Transform;
-class Component;
 
 class GameObject : public HObject
 {
@@ -14,7 +13,7 @@ public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_GAMEOBJECT, HObject)
 public:
 	GameObject();
-	virtual ~GameObject();
+	~GameObject() override;
 
 	Transform* transform() const;	
 	void AddComponent(Component* cmp);
@@ -26,7 +25,7 @@ public:
 	static InterfaceID GetIID();
 
 private:
-
+	
 	std::vector<SharedPtr<Component>> m_Comps;
 	Transform* m_pTransform;
 };

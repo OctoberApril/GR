@@ -1,5 +1,4 @@
 #pragma once
-#include "GPass.h"
 #include <d3d12.h>
 #include <wrl.h>
 #include <dxgi1_6.h>
@@ -8,11 +7,10 @@
 
 class DX12Graphics
 {
-	template<typename T>
-	using ComPtr = Microsoft::WRL::ComPtr<T>;
+	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 public:
-	DX12Graphics();
+	DX12Graphics(int w, int h);
 	~DX12Graphics();
 	DX12Graphics(const DX12Graphics&) = delete;
 	DX12Graphics(DX12Graphics&&) = delete;
@@ -21,26 +19,29 @@ public:
 	DX12Graphics& operator=(DX12Graphics&&) = delete;
 
 	bool Initialize();
-
 	void Update();
-
-	ComPtr<ID3D12DescriptorHeap> GetRtvDescriptorHeap() { return m_DescriptorHeap; }
+	void LateUpdate();
 
 	ID3D12Device* GetDevice() const;
+	ID3D12CommandQueue* GetCommandQueue() const;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRtvDescriptor() const;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetDsvDescriptor() const;
+	ComPtr<ID3D12Resource> GetCurrentRtvResource() const;
 
 	static DX12Graphics* Instance;
 
 private:
-		
-	ComPtr<ID3D12CommandQueue> m_GraphicsCommandQueue;
-
-	ComPtr<ID3D12CommandAllocator> m_GraphicsCommandAllocator;
 
 	ComPtr<ID3D12Device3> m_Device;
+	ComPtr<ID3D12CommandQueue> m_GraphicsCommandQueue;
+	ComPtr<IDXGISwapChain1> m_SwapChain;
+	ComPtr<ID3D12DescriptorHeap> m_RtvDescriptorHeap;
+	ComPtr<ID3D12DescriptorHeap> m_DsvDescriptorHeap;
+	ComPtr<ID3D12Resource> m_DsvResource;
 
-	ComPtr<ID3D12DescriptorHeap> m_DescriptorHeap;
+	int m_GraphicsWidth;
+	int m_GraphicsHeight;
 
-	ComPtr<IDXGISwapChain1> m_SwapChain;	
-
-	std::shared_ptr<GPass> m_Gpass;
+	uint64_t m_GlobalFrame;
 };

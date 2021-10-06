@@ -11,9 +11,11 @@ public:
 	Input(Input&&) = delete;
 	Input& operator=(const Input&) = delete;
 
+	void Initialize();
 	void Update();
-	void GraphicsEndUpdate();
-
+	void LateUpdate();
+	static Input* Instance;
+	
 	bool GetKey(KeyCode::Key keyCode);
 	bool GetKeyDown(KeyCode::Key keyCode);
 	bool GetKeyUp(KeyCode::Key keyCode);

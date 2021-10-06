@@ -2,7 +2,7 @@
 #include "Input.h"
 #include <iostream>
 
-extern Input* g_Input;
+
 extern int g_iWidth;
 extern int g_iHeight;
 
@@ -59,12 +59,12 @@ glm::mat4 Camera::GetLocal2WorldMatrix() const
 void Camera::Update()
 {
 	{
-		static float2 lastMousePosition = g_Input->GetMousePosition();
+		static float2 lastMousePosition = Input::Instance->GetMousePosition();
 
-		if (g_Input->GetMouseButton(0))
+		if (Input::Instance->GetMouseButton(0))
 		{
 			//对鼠标的移动 做绕y或者x旋转			
-			float2 currentMousePosition = g_Input->GetMousePosition();
+			float2 currentMousePosition = Input::Instance->GetMousePosition();
 			float2 deltaMove = currentMousePosition - lastMousePosition;
 			lastMousePosition = currentMousePosition;
 
@@ -76,11 +76,11 @@ void Camera::Update()
 		}
 		else
 		{
-			lastMousePosition = g_Input->GetMousePosition();
+			lastMousePosition = Input::Instance->GetMousePosition();
 		}
 	}
 
-	if (g_Input->GetKey(KeyCode::W))
+	if (Input::Instance->GetKey(KeyCode::W))
 	{
 		m_Position = GetLocal2WorldMatrix() * glm::vec4(-.0f, 0, .5f, 1);
 		//m_Position = (m_Position * (glm::mat3)GetViewMatrix() + glm::vec3(-.0f, 0, .5f)) * (glm::mat3)GetLocal2WorldMatrix();
@@ -92,7 +92,7 @@ void Camera::Update()
 		std::cout << std::endl;
 	}
 
-	if (g_Input->GetKey(KeyCode::S))
+	if (Input::Instance->GetKey(KeyCode::S))
 	{
 		m_Position = GetLocal2WorldMatrix() * glm::vec4(-.0f, 0, -.5f, 1);
 		//m_Position = (m_Position * (glm::mat3)GetViewMatrix() + glm::vec3(-.0f, 0, -.5f)) * (glm::mat3)GetLocal2WorldMatrix();
@@ -104,7 +104,7 @@ void Camera::Update()
 		std::cout << std::endl;
 	}
 
-	if (g_Input->GetKey(KeyCode::A))
+	if (Input::Instance->GetKey(KeyCode::A))
 	{
 		m_Position = GetLocal2WorldMatrix() * glm::vec4(-1.5f, 0, 0, 1);
 		//m_Position = (m_Position * (glm::mat3)GetViewMatrix() + glm::vec3(-.5f, 0, 0)) * (glm::mat3)GetLocal2WorldMatrix();
@@ -116,7 +116,7 @@ void Camera::Update()
 		std::cout << std::endl;
 	}
 
-	if (g_Input->GetKey(KeyCode::D))
+	if (Input::Instance->GetKey(KeyCode::D))
 	{
 		m_Position = GetLocal2WorldMatrix() * glm::vec4(1.5f, 0, 0, 1);
 		//m_Position = (m_Position * (glm::mat3)GetViewMatrix() + glm::vec3(.5f, 0, 0)) * (glm::mat3)GetLocal2WorldMatrix();

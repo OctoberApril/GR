@@ -79,14 +79,17 @@
     <Filter Include="头文件\Win32">
       <UniqueIdentifier>{91dc35bc-3573-4abe-8183-128e0022ed0d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Win32">
-      <UniqueIdentifier>{ea08d254-9f0d-437f-9fef-04fa9112e047}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\Utils">
       <UniqueIdentifier>{a49b7bc2-92fa-4d5a-99fb-194f5657847e}</UniqueIdentifier>
     </Filter>
     <Filter Include="源文件\Utils">
       <UniqueIdentifier>{dfc95de2-d6fd-4764-b2cb-22d5c54661e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\System">
+      <UniqueIdentifier>{7dccac83-7251-4575-afb8-bd8938359bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\System">
+      <UniqueIdentifier>{6dba830d-e0de-4e48-9fcf-46e28f596ce6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,15 +147,6 @@
     <ClCompile Include="DescriptorAllocation.cpp">
       <Filter>源文件\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>源文件\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="Win32App.cpp">
-      <Filter>源文件\Win32</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>源文件\Win32</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -164,6 +158,21 @@
     </ClCompile>
     <ClCompile Include="UploadBuffer.cpp">
       <Filter>源文件\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererSystem.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="Win32App.cpp">
+      <Filter>源文件\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -473,22 +482,13 @@
     <ClInclude Include="DescriptorAllocation.h">
       <Filter>头文件\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Win32App.h">
-      <Filter>头文件\Win32</Filter>
-    </ClInclude>
     <ClInclude Include="KeyCode.h">
-      <Filter>头文件\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
       <Filter>头文件\Win32</Filter>
     </ClInclude>
     <ClInclude Include="Helper.h">
       <Filter>头文件\Win32</Filter>
     </ClInclude>
     <ClInclude Include="d3dx12.h">
-      <Filter>头文件\Win32</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics.h">
       <Filter>头文件\Win32</Filter>
     </ClInclude>
     <ClInclude Include="ReflectionTable.h">
@@ -499,6 +499,21 @@
     </ClInclude>
     <ClInclude Include="UploadBuffer.h">
       <Filter>头文件\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="RendererSystem.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Win32App.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>头文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>头文件\System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

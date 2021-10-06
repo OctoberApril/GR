@@ -8,6 +8,9 @@ class MeshRenderer : public Renderer
 {
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_MESHRENDERER, Renderer)
+	MeshRenderer() = default;
+	~MeshRenderer() = default;
 	
+	void Draw() const;
 };
 

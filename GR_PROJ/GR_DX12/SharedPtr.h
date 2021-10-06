@@ -111,7 +111,7 @@ public:
 		Release();
 	}
 
-	T* Get()
+	T* Get() const
 	{
 		return m_Ptr;
 	}

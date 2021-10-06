@@ -10,9 +10,7 @@ Win32App* Win32App::Instance = nullptr;
 
 Win32App::Win32App(std::string window_name, int width, int height)
 	:m_WindowTitle(std::move(window_name)),
-	m_Width(width), m_Height(height),
-	m_GraphicsContext(nullptr),
-	m_InputContext(nullptr)
+	m_iWidth(width), m_iHeight(height)
 {
 	assert(Instance == nullptr);
 	Instance = this;
@@ -31,19 +29,11 @@ bool Win32App::Initialize()
 
 		RegisterClassA(&wndClass);
 
-		m_Hwnd = CreateWindowA("H_DX12", m_WindowTitle.c_str(), WS_OVERLAPPEDWINDOW, 300, 300, m_Width, m_Height, nullptr, nullptr, nullptr, nullptr);
+		m_Hwnd = CreateWindowA("H_DX12", m_WindowTitle.c_str(), WS_OVERLAPPEDWINDOW, m_iWidth, m_iHeight, m_iWidth, m_iHeight, nullptr, nullptr, nullptr, nullptr);
 		SetWindowLongPtr(m_Hwnd, GWLP_USERDATA, (LONG)this);
-		m_InputContext = new Input();
-		m_GraphicsContext = new DX12Graphics();
 
 		UpdateWindow(m_Hwnd);
 		ShowWindow(m_Hwnd, SW_NORMAL);
-
-		if (!m_GraphicsContext->Initialize())
-		{
-			std::cout << "Initialize Graphics Failed." << std::endl;
-			return false;
-		}
 	}
 	catch (...)
 	{
@@ -51,7 +41,6 @@ bool Win32App::Initialize()
 	}
 	return true;
 }
-
 
 void Win32App::Update()
 {
@@ -65,22 +54,19 @@ void Win32App::Update()
 		}
 		else
 		{
-			m_InputContext->Update();
-			m_GraphicsContext->Update();
 
-			m_InputContext->GraphicsEndUpdate();
 		}
 	}
 }
 
-Input* Win32App::GetInputContext() const
+void Win32App::LateUpdate()
 {
-	return m_InputContext;
+	
 }
 
-DX12Graphics* Win32App::GetGraphicsContext() const
+bool Win32App::Exit() const
 {
-	return m_GraphicsContext;
+	return m_bExit;
 }
 
 
@@ -92,6 +78,7 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_DESTROY:
+		Instance->m_bExit = true;
 		PostQuitMessage(0);
 		break;
 	case WM_SYSKEYUP:
@@ -114,8 +101,8 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			std::cout << "ScanCode Is NULL" << std::endl;
 			scanCode = MapVirtualKeyW((UINT)wParam, MAPVK_VK_TO_VSC);
 		}
-
-		Instance->m_InputContext->SetKeyStatus((KeyCode::Key)vkeyCode, isPressed);
+			
+		Input::Instance->SetKeyStatus((KeyCode::Key)vkeyCode, isPressed);
 
 #if __DEBUG
 		std::cout << "Alt:" << alt << " " << "Control:" << control << " " << "shift:" << shift << std::endl;
@@ -142,9 +129,9 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 
-		Instance->m_InputContext->SetKeyStatus(KeyCode::LButton, lButton);
-		Instance->m_InputContext->SetKeyStatus(KeyCode::RButton, rButton);
-		Instance->m_InputContext->SetKeyStatus(KeyCode::MButton, mButton);
+		Input::Instance->SetKeyStatus(KeyCode::LButton, lButton);
+		Input::Instance->SetKeyStatus(KeyCode::RButton, rButton);
+		Input::Instance->SetKeyStatus(KeyCode::MButton, mButton);
 
 #if __DEBUG
 		std::cout << "LButton:" << lButton << std::endl;
@@ -164,7 +151,7 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int x = LOWORD(lParam);
 		int y = HIWORD(lParam);
 
-		Instance->m_InputContext->SetMousePosition(x, y);
+		Input::Instance->SetMousePosition(x, y);
 
 #if __DEBUG
 		std::cout << "WM_MOUSEMOVE (" << x << "," << y << ")" << std::endl;
@@ -183,7 +170,7 @@ LRESULT Win32App::WinProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		int y = HIWORD(lParam);
 
 		short deleteMove = static_cast<short>(HIWORD(wParam)) / WHEEL_DELTA;
-		Instance->m_InputContext->SetScrollWheelStatus(deleteMove);
+		Input::Instance->SetScrollWheelStatus(deleteMove);
 
 #if __DEBUG
 		std::cout << "rotate:" << deleteMove << std::endl;

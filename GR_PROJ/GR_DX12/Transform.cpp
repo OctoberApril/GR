@@ -1,8 +1,29 @@
-#include "SharedPtr.h"
 #include "Transform.h"
+#include "Scene.h"
+#include "GameObject.h"
 
 #include <glm/gtx/quaternion.hpp>
 
+
+Transform::Transform(GameObject* go, GameObject* parent, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
+	:m_Position(position), m_Rotation(rotation), m_Scale(scale),
+	m_Parent(parent != nullptr ? parent->transform() : nullptr)
+{
+	assert(go != nullptr);
+	//父类赋值
+	Component::m_pTransform = this;
+	Component::m_pGameObject = go;
+
+	if (parent == nullptr)
+	{
+		Scene::Default->AddGameObjectToSceneRoot(go);
+	}
+}
+
+Transform::~Transform()
+{
+	m_Children.clear();
+}
 
 InterfaceID Transform::GetIID()
 {

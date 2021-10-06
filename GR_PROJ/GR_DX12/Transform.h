@@ -2,9 +2,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <vector>
-
 #include "Component.h"
-#include "Scene.h"
+
+class GameObject;
 
 static const InterfaceID IID_TRANSFORM = { 2,1,0,{0,0,0,0,0,0,0,0} };
 
@@ -13,17 +13,12 @@ class Transform : public Component
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_TRANSFORM, Component)
 public:
-	Transform(GameObject* go = nullptr, Transform* parent = Scene::Default->GetRootTransform(), glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
+	Transform(GameObject* go, GameObject* parent = nullptr, glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::quat rotation = glm::identity<glm::quat>(),
-		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f))
-		:m_Position(position), m_Rotation(rotation), m_Scale(scale),m_Parent(parent)
-	{
-		//父类赋值
-		m_pTransform = this;
-		m_pGameObject = go;
-	}
+		glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f));
 
-	~Transform() override = default;
+	~Transform() override;
+	
 	static InterfaceID GetIID();
 	
 	glm::mat4 GetLocalToWorldMatrix() const;
@@ -46,7 +41,6 @@ public:
 	Transform* GetChild(int index) const;
 	int GetChildCount() const;
 	void AddChild(Transform* other);
-	//删除Component 使用GameObject中的方法删除
 
 private:
 	glm::vec3 m_Position;

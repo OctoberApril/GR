@@ -1,30 +1,29 @@
 #pragma once
 #include <string>
+#include <vector>
 #include "HObject.h"
-class Transform;
-
 
 static const InterfaceID IID_SCENE = { 3,0,0,{0,0,0,0,0,0,0,0} };
+
+class GameObject;
 
 class Scene : public HObject
 {
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_SCENE, HObject)
 public:
-	Scene(std::string scene_name = "");
-	~Scene();
+	Scene(std::string scene_name);
+	~Scene() override;
 
-	Transform* GetRootTransform() const;
-
+	std::vector<GameObject*> GetRootGameObjects() const;
+	void AddGameObjectToSceneRoot(GameObject* go);
+	
 	static InterfaceID GetIID();
-
-public:
 	static Scene* Default;
 private:
 
 	std::string m_SceneName;
-
-	Transform* m_pRootTransform;
+	std::vector<SharedPtr<GameObject>> m_RootGameObjects;
 };
 
 

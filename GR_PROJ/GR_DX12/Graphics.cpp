@@ -1,16 +1,17 @@
 #include "Graphics.h"
-
 #include <iostream>
 #include <cassert>
+
+#include "d3dx12.h"
 #include "Helper.h"
 
 
-extern int g_iWidth;
-extern int g_iHeight;
-
 DX12Graphics* DX12Graphics::Instance = nullptr;
 
-DX12Graphics::DX12Graphics()
+DX12Graphics::DX12Graphics(int w, int h)
+	:m_Device(nullptr), m_GraphicsCommandQueue(nullptr), m_SwapChain(nullptr), m_RtvDescriptorHeap(nullptr),
+	m_GraphicsWidth(w), m_GraphicsHeight(h),
+	m_GlobalFrame(0)
 {
 	assert(Instance == nullptr);
 	Instance = this;
@@ -27,12 +28,11 @@ bool DX12Graphics::Initialize()
 	try
 	{
 #if _DEBUG
-
 		ComPtr<ID3D12Debug> debugInterface;
 		ThrowIfFailed(D3D12GetDebugInterface(__uuidof(ID3D12Debug), reinterpret_cast<void**>(debugInterface.GetAddressOf())));
 		debugInterface->EnableDebugLayer();
-
 #endif
+
 		ComPtr<IDXGIFactory4> dxgiFactory4;
 		ThrowIfFailed(CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(dxgiFactory4.GetAddressOf())));
 
@@ -71,8 +71,8 @@ bool DX12Graphics::Initialize()
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 		swapChainDesc.BufferCount = 2;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.Height = g_iHeight;
-		swapChainDesc.Width = g_iWidth;
+		swapChainDesc.Width = m_GraphicsWidth;
+		swapChainDesc.Height = m_GraphicsHeight;
 		swapChainDesc.Scaling = DXGI_SCALING::DXGI_SCALING_NONE;
 		swapChainDesc.Stereo = FALSE;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
@@ -81,23 +81,59 @@ bool DX12Graphics::Initialize()
 		ThrowIfFailed(dxgiFactory4->CreateSwapChainForHwnd(m_GraphicsCommandQueue.Get(), GetActiveWindow(), &swapChainDesc, nullptr, nullptr, m_SwapChain.GetAddressOf()));
 
 		//Create RTV DescriptorView
-		D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
-		descriptorHeapDesc.NodeMask = 0;
-		descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-		descriptorHeapDesc.NumDescriptors = 2;
-		ThrowIfFailed(m_Device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(m_DescriptorHeap.GetAddressOf())));
-
-		//RTV
-		for (int i = 0; i < swapChainDesc.BufferCount; i++)
 		{
-			ComPtr<ID3D12Resource> backBuffer;
-			m_SwapChain->GetBuffer(i, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-			D3D12_CPU_DESCRIPTOR_HANDLE handle = {};
-			handle.ptr = m_DescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr + i * m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-			m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, handle);
+			D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
+			descriptorHeapDesc.NodeMask = 0;
+			descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+			descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+			descriptorHeapDesc.NumDescriptors = 2;
+			ThrowIfFailed(m_Device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(m_RtvDescriptorHeap.GetAddressOf())));
+
+			//RTV
+			for (int i = 0; i < swapChainDesc.BufferCount; i++)
+			{
+				ComPtr<ID3D12Resource> backBuffer;
+				m_SwapChain->GetBuffer(i, IID_PPV_ARGS(backBuffer.GetAddressOf()));
+				D3D12_CPU_DESCRIPTOR_HANDLE handle = {};
+				handle.ptr = m_RtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr + i * m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+				m_Device->CreateRenderTargetView(backBuffer.Get(), nullptr, handle);
+			}
 		}
 
+		//Create DepthStencil DescriptorHeap
+		{
+			D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc = {};
+			descriptorHeapDesc.NumDescriptors = 1;
+			descriptorHeapDesc.NodeMask = 0;
+			descriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+			descriptorHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+			ThrowIfFailed(m_Device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(m_DsvDescriptorHeap.GetAddressOf())));
+
+			CD3DX12_HEAP_PROPERTIES dsvProperties(D3D12_HEAP_TYPE_DEFAULT);
+			D3D12_RESOURCE_DESC resourceDesc = {};
+			resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+			resourceDesc.Alignment = 0;
+			resourceDesc.Width = m_GraphicsWidth;
+			resourceDesc.Height = m_GraphicsHeight;
+			resourceDesc.DepthOrArraySize = 1;
+			resourceDesc.MipLevels = 1;
+			resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			resourceDesc.SampleDesc.Count = 1;
+			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+			resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+			D3D12_CLEAR_VALUE clearValue = {};
+			clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			clearValue.DepthStencil.Depth = 1.0f;
+
+			ThrowIfFailed(m_Device->CreateCommittedResource(&dsvProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue, IID_PPV_ARGS(m_DsvResource.GetAddressOf())));
+
+			D3D12_DEPTH_STENCIL_VIEW_DESC dsvViewDesc = {};
+			dsvViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			dsvViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+			dsvViewDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH;
+			m_Device->CreateDepthStencilView(m_DsvResource.Get(), &dsvViewDesc, m_DsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+		}
 
 #if _DEBUG
 
@@ -127,9 +163,6 @@ bool DX12Graphics::Initialize()
 
 #endif
 
-		m_Gpass = std::make_shared<GPass>();
-		m_Gpass->Initialize(m_Device);
-
 		return true;
 	}
 	catch (...)
@@ -140,10 +173,40 @@ bool DX12Graphics::Initialize()
 
 void DX12Graphics::Update()
 {
-	m_Gpass->Draw(m_SwapChain, m_Device, m_GraphicsCommandQueue, m_DescriptorHeap);
+	m_GlobalFrame++;
+}
+
+void DX12Graphics::LateUpdate()
+{
+	
 }
 
 ID3D12Device* DX12Graphics::GetDevice() const
 {
 	return m_Device.Get();
+}
+
+ID3D12CommandQueue* DX12Graphics::GetCommandQueue() const
+{
+	return m_GraphicsCommandQueue.Get();
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DX12Graphics::GetCurrentRtvDescriptor() const
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_RtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	cpuHandle.ptr += m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV) * (m_GlobalFrame % 2);
+	return cpuHandle;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DX12Graphics::GetDsvDescriptor() const
+{
+	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_DsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	return cpuHandle;
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DX12Graphics::GetCurrentRtvResource() const
+{
+	ComPtr<ID3D12Resource> backBuffer;
+	m_SwapChain->GetBuffer(m_GlobalFrame % 2, IID_PPV_ARGS(backBuffer.GetAddressOf()));
+	return backBuffer;
 }

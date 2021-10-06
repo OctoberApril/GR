@@ -30,16 +30,22 @@ Transform* GameObject::transform() const
 	return m_pTransform;
 }
 
+void GameObject::AddComponent(Component* cmp)
+{
+	SharedPtr<Component> newCmp(cmp);
+	m_Comps.push_back(newCmp);
+}
+
 
 void GameObject::Destroy(SharedPtr<Component> cpt)
 {
 	if (cpt == nullptr) return;
 	if (cpt->m_pGameObject == nullptr) return;
-	
+
 	GameObject* go = cpt->m_pGameObject;
-	for(auto i = go->m_Comps.begin();i != go->m_Comps.end();i++)
+	for (auto i = go->m_Comps.begin(); i != go->m_Comps.end(); i++)
 	{
-		if(*i == cpt)
+		if (*i == cpt)
 		{
 			(*i).Release();
 			go->m_Comps.erase(i);
