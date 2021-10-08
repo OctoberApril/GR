@@ -11,7 +11,7 @@ DX12Graphics* DX12Graphics::Instance = nullptr;
 DX12Graphics::DX12Graphics(int w, int h)
 	:m_Device(nullptr), m_GraphicsCommandQueue(nullptr), m_SwapChain(nullptr), m_RtvDescriptorHeap(nullptr),
 	m_GraphicsWidth(w), m_GraphicsHeight(h),
-	m_GlobalFrame(0)
+	m_GlobalFrame(-1)
 {
 	assert(Instance == nullptr);
 	Instance = this;
@@ -189,6 +189,21 @@ ID3D12Device* DX12Graphics::GetDevice() const
 ID3D12CommandQueue* DX12Graphics::GetCommandQueue() const
 {
 	return m_GraphicsCommandQueue.Get();
+}
+
+IDXGISwapChain1* DX12Graphics::GetSwapchain() const
+{
+	return m_SwapChain.Get();
+}
+
+int DX12Graphics::GetGraphicsWidth() const
+{
+	return m_GraphicsWidth;
+}
+
+int DX12Graphics::GetGraphicsHeight() const
+{
+	return m_GraphicsHeight;
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DX12Graphics::GetCurrentRtvDescriptor() const

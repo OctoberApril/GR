@@ -33,6 +33,18 @@ void Scene::AddGameObjectToSceneRoot(GameObject* go)
 	m_RootGameObjects.emplace_back(SharedPtr<GameObject>(go));
 }
 
+void Scene::RemoveGameObjectFromScene(GameObject* go)
+{
+	for(auto p = m_RootGameObjects.begin();p != m_RootGameObjects.end();p++)
+	{
+		if(*p == go)
+		{
+			m_RootGameObjects.erase(p);
+			return;
+		}
+	}
+}
+
 
 
 

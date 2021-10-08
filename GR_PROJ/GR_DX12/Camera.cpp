@@ -3,8 +3,8 @@
 #include <iostream>
 
 
-extern int g_iWidth;
-extern int g_iHeight;
+static int g_iWidth;
+static int g_iHeight;
 
 void Camera::LookAtLH(glm::vec3 eye, glm::vec3 center, glm::vec3 up)
 {

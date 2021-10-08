@@ -12,8 +12,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-extern int g_iWidth;
-extern int g_iHeight;
+static int g_iWidth;
+static int g_iHeight;
 
 static Camera* camera = nullptr;
 

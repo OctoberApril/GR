@@ -10,7 +10,7 @@ Win32App* Win32App::Instance = nullptr;
 
 Win32App::Win32App(std::string window_name, int width, int height)
 	:m_WindowTitle(std::move(window_name)),
-	m_iWidth(width), m_iHeight(height)
+	m_iWidth(width), m_iHeight(height), m_bExit(false)
 {
 	assert(Instance == nullptr);
 	Instance = this;
@@ -45,17 +45,10 @@ bool Win32App::Initialize()
 void Win32App::Update()
 {
 	MSG msg = {};
-	while (msg.message != WM_QUIT)
+	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
 	{
-		if (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else
-		{
-
-		}
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 }
 

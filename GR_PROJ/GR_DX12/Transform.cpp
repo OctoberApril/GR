@@ -77,6 +77,16 @@ Transform* Transform::Parent() const
 
 void Transform::SetParent(Transform* parent)
 {
+	if (this->m_Parent == parent) return;
+	if(this->m_Parent == nullptr)
+	{
+		Scene::Default->RemoveGameObjectFromScene(this->m_pGameObject);
+	}
+	
+	if(parent == nullptr)
+	{
+		Scene::Default->AddGameObjectToSceneRoot(this->m_pGameObject);
+	}
 	m_Parent = parent;
 }
 

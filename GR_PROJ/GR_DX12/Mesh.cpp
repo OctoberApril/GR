@@ -1,27 +1,27 @@
 #include "Mesh.h"
 
 
-void Mesh::SetVectices(std::vector<glm::vec3> vertices)
+void Mesh::SetVectices(const std::vector<glm::vec3>& vertices)
 {	
 	m_Vertices = vertices;
 }
 
-void Mesh::SetColors(std::vector<glm::vec4> colors)
+void Mesh::SetColors(const std::vector<glm::vec4>& colors)
 {
 	m_Colors = colors;
 }
 
-void Mesh::SetUv0s(std::vector<glm::vec2> uv0s)
+void Mesh::SetUv0s(const std::vector<glm::vec2>& uv0s)
 {
 	m_Uv0s = uv0s;
 }
 
-void Mesh::SetNormals(std::vector<glm::vec3> normals)
+void Mesh::SetNormals(const std::vector<glm::vec3>& normals)
 {
 	m_Normals = normals;
 }
 
-void Mesh::SetIndices(std::vector<uint32_t> indices)
+void Mesh::SetIndices(const std::vector<uint32_t>& indices)
 {
 	m_Indices = indices;
 }

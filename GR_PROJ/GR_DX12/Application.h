@@ -33,11 +33,11 @@ protected:
 
 	/// Cleanup after the main loop. Called by Application.
 	virtual void Stop();
-
+		
 private:
+	
 	template<typename T> using SharedPtr = std::shared_ptr<T>;
-
-
+	
 	SharedPtr<Win32App> m_Win32Context;
 	SharedPtr<DX12Graphics> m_DX12GraphicsContext;
 	SharedPtr<Input> m_InputContext;

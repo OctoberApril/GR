@@ -14,6 +14,7 @@ void Application::Initialize()
 	m_Win32Context->Initialize();
 	m_DX12GraphicsContext->Initialize();
 	m_InputContext->Initialize();
+	m_RendererContext->Initialize();
 }
 
 void Application::Run()

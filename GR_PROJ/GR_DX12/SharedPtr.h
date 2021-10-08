@@ -127,6 +127,8 @@ public:
 	}
 
 private:
+	template<typename U> friend class SharedPtr;	
+	
 	T* m_Ptr;
 };
 

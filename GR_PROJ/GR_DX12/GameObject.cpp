@@ -1,16 +1,21 @@
 #include "Transform.h"
 #include "GameObject.h"
 #include "SharedPtr.h"
+#include "Scene.h"
 
 InterfaceID GameObject::GetIID()
 {
 	return IID_GAMEOBJECT;
 }
 
-
 GameObject::GameObject() :m_pTransform(new Transform(this))
 {
 
+}
+
+GameObject::GameObject(GameObject* parent): m_pTransform(new Transform(this, parent))
+{
+	
 }
 
 
@@ -20,10 +25,9 @@ GameObject::~GameObject()
 	{
 		m_Comps[i].Release();
 	}
-
+	
 	delete m_pTransform;
 }
-
 
 Transform* GameObject::transform() const
 {
@@ -35,7 +39,6 @@ void GameObject::AddComponent(Component* cmp)
 	SharedPtr<Component> newCmp(cmp);
 	m_Comps.push_back(newCmp);
 }
-
 
 void GameObject::Destroy(SharedPtr<Component> cpt)
 {
@@ -52,4 +55,6 @@ void GameObject::Destroy(SharedPtr<Component> cpt)
 		}
 	}
 }
+
+
 

@@ -24,7 +24,10 @@ public:
 
 	ID3D12Device* GetDevice() const;
 	ID3D12CommandQueue* GetCommandQueue() const;
-
+	IDXGISwapChain1* GetSwapchain() const;
+	int GetGraphicsWidth() const;
+	int GetGraphicsHeight() const;
+	
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentRtvDescriptor() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDsvDescriptor() const;
 	ComPtr<ID3D12Resource> GetCurrentRtvResource() const;

@@ -17,6 +17,7 @@ public:
 
 	std::vector<GameObject*> GetRootGameObjects() const;
 	void AddGameObjectToSceneRoot(GameObject* go);
+	void RemoveGameObjectFromScene(GameObject* go);
 	
 	static InterfaceID GetIID();
 	static Scene* Default;

@@ -3,24 +3,25 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
+#include "Component.h"
 
-#include "HObject.h"
 
 static const InterfaceID IID_MESH = { 4,3,0,{0,0,0,0,0,0,0,0} };
 
-class Mesh : public HObject
+
+class Mesh : public Component
 {
 public:
-	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_MESH, HObject)
+	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_MESH, Component)
 public:
 	Mesh() = default;
 	virtual ~Mesh() = default;
 
-	void SetVectices(std::vector<glm::vec3> vertices);
-	void SetColors(std::vector<glm::vec4> colors);
-	void SetUv0s(std::vector<glm::vec2> uv0s);
-	void SetNormals(std::vector<glm::vec3> normals);
-	void SetIndices(std::vector<uint32_t> indices);
+	void SetVectices(const std::vector<glm::vec3>& vertices);
+	void SetColors(const std::vector<glm::vec4>& colors);
+	void SetUv0s(const std::vector<glm::vec2>& uv0s);
+	void SetNormals(const std::vector<glm::vec3>& normals);
+	void SetIndices(const std::vector<uint32_t>& indices);
 	
 	std::vector<glm::vec3> GetVertices() const;
 	std::vector<glm::vec4> GetColors() const;
