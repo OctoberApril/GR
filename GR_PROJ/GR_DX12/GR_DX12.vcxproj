@@ -131,6 +131,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d12.lib;dxguid.lib;dxgi.lib;d3dcompiler.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CopyFileToFolders>
+      <DestinationFileName>%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -311,8 +314,18 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Model\Sponza\sponza.mtl" />
-    <None Include="Model\Sponza\textures\Thumbs.db" />
+    <CopyFileToFolders Include="Model\Sponza\sponza.mtl">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </ExcludedFromBuild>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\Thumbs.db">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
     <None Include="ThirdParty\assimp\color4.inl" />
     <None Include="ThirdParty\assimp\config.h.in" />
     <None Include="ThirdParty\assimp\material.inl" />
@@ -324,61 +337,197 @@
     <None Include="ThirdParty\assimp\vector3.inl" />
     <CopyFileToFolders Include="ThirdParty\DLLs\assimp-vc142-mt.dll">
       <FileType>Document</FileType>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename)%(Extension)</DestinationFileName>
     </CopyFileToFolders>
     <CopyFileToFolders Include="ThirdParty\DLLs\zlib.dll">
       <FileType>Document</FileType>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename)%(Extension)</DestinationFileName>
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Model\Sponza\textures\background.tga" />
-    <Image Include="Model\Sponza\textures\background_ddn.tga" />
-    <Image Include="Model\Sponza\textures\chain_texture.tga" />
-    <Image Include="Model\Sponza\textures\chain_texture_ddn.tga" />
-    <Image Include="Model\Sponza\textures\lion.tga" />
-    <Image Include="Model\Sponza\textures\lion2_ddn.tga" />
-    <Image Include="Model\Sponza\textures\lion_ddn.tga" />
-    <Image Include="Model\Sponza\textures\spnza_bricks_a_ddn.tga" />
-    <Image Include="Model\Sponza\textures\spnza_bricks_a_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_arch_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_arch_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_ceiling_a_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_ceiling_a_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_column_a_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_column_a_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_column_b_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_column_b_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_column_c_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_column_c_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_curtain_blue_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_curtain_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_curtain_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_curtain_green_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_details_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_details_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_fabric_blue_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_fabric_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_fabric_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_fabric_green_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_flagpole_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_flagpole_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_floor_a_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_floor_a_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_roof_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_roof_diff.tga" />
-    <Image Include="Model\Sponza\textures\sponza_thorn_ddn.tga" />
-    <Image Include="Model\Sponza\textures\sponza_thorn_diff.tga" />
-    <Image Include="Model\Sponza\textures\vase_ddn.tga" />
-    <Image Include="Model\Sponza\textures\vase_dif.tga" />
-    <Image Include="Model\Sponza\textures\vase_hanging.tga" />
-    <Image Include="Model\Sponza\textures\vase_hanging_ddn.tga" />
-    <Image Include="Model\Sponza\textures\vase_plant.tga" />
-    <Image Include="Model\Sponza\textures\vase_round.tga" />
-    <Image Include="Model\Sponza\textures\vase_round_ddn.tga" />
+    <CopyFileToFolders Include="Model\Sponza\textures\background.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\background_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\chain_texture.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\chain_texture_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\lion.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\lion2_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\lion_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\spnza_bricks_a_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\spnza_bricks_a_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_arch_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_arch_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_ceiling_a_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_ceiling_a_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_a_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_a_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_b_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_b_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_c_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_c_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_blue_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_green_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_details_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_details_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_blue_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_green_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_flagpole_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_flagpole_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_floor_a_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_floor_a_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_roof_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_roof_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_thorn_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\sponza_thorn_diff.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_dif.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_hanging.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_hanging_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_plant.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_round.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Model\Sponza\textures\vase_round_ddn.tga">
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Model\Sponza\sponza.obj">
+    <CopyFileToFolders Include="Model\Sponza\sponza.obj">
       <FileType>Document</FileType>
-    </None>
+      <DeploymentContent>true</DeploymentContent>
+      <DestinationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
