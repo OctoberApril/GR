@@ -1,9 +1,14 @@
 #include "AssetImporter.h"
+
+#include "DefaultMaterial.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include "assimp/scene.h"
 #include "GameObject.h"
+#include "Material.h"
 #include "Mesh.h"
+#include "MeshRenderer.h"
+#include "Transform.h"
 
 
 GameObject* AssetImporter::ImportModel(const char* path)
@@ -19,14 +24,22 @@ GameObject* AssetImporter::ImportModel(const char* path)
 void AssetImporter::RecursiveModelNode(GameObject* parent, const aiScene* scene, const aiNode* node)
 {
 	GameObject* go = new GameObject(parent);
+	if(parent != nullptr)
+	{
+		parent->transform()->AddChild(go->transform());
+	}
+	
 	Mesh* mesh = go->AddComponent<Mesh>();
-
+	MeshRenderer* renderer = go->AddComponent<MeshRenderer>();
+	DefaultMaterial* mat = new DefaultMaterial();
+	renderer->SetMaterial(mat);
+	
 	std::vector<glm::vec3>* vertices = new std::vector<glm::vec3>();
 	std::vector<glm::vec2>* uv0 = new std::vector<glm::vec2>();
 	std::vector<glm::vec4>* colors = new std::vector<glm::vec4>();
 	std::vector<glm::vec3>* normals = new std::vector<glm::vec3>();
 	std::vector<uint32_t>* indices = new std::vector<uint32_t>();
-
+	
 	for (int i = 0; i < node->mNumMeshes; i++)
 	{
 		auto mesh = scene->mMeshes[node->mMeshes[i]];
@@ -51,7 +64,7 @@ void AssetImporter::RecursiveModelNode(GameObject* parent, const aiScene* scene,
 			auto face = mesh->mFaces[j];
 			for (int k = 0; k < face.mNumIndices; k++)
 			{
-				indices->push_back(face.mIndices[k] + vertices->size());
+				indices->push_back(face.mIndices[k]);
 			}
 		}
 	}

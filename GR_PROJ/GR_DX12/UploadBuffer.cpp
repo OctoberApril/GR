@@ -54,7 +54,7 @@ UploadBuffer::UploadPage::UploadPage(size_t size) : GpuAddress(0),CpuAddress(nul
 	heapProperties.VisibleNodeMask = 0;
 
 	D3D12_RESOURCE_DESC bufferDesc =  CD3DX12_RESOURCE_DESC::Buffer(size);	
-	ThrowIfFailed(device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_ALLOW_ALL_BUFFERS_AND_TEXTURES, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(m_Resource.GetAddressOf())));
+	ThrowIfFailed(device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &bufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(m_Resource.GetAddressOf())));
 
 	m_Resource->Map(0, nullptr, &CpuAddress);
 	GpuAddress = m_Resource->GetGPUVirtualAddress();

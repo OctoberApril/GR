@@ -27,6 +27,7 @@ HPass::HPass(
 	RebuildShaderBlob();
 	RebuildPassReflectionTable();
 	RebuildRootSignature();
+	RebuildPipelineStateObject();
 }
 
 void HPass::RebuildShaderBlob()
@@ -222,8 +223,8 @@ void HPass::RebuildPipelineStateObject()
 	psoDesc.SampleDesc.Quality = 0;
 	psoDesc.NodeMask = 0;
 
-	D3D12_INPUT_ELEMENT_DESC elements[4];
-	psoDesc.InputLayout.NumElements = 4;
+	D3D12_INPUT_ELEMENT_DESC elements[1];
+	psoDesc.InputLayout.NumElements = 1;
 	psoDesc.InputLayout.pInputElementDescs = elements;
 	elements[0].AlignedByteOffset = 0;
 	elements[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -233,7 +234,7 @@ void HPass::RebuildPipelineStateObject()
 	elements[0].SemanticName = "POSITION";
 	elements[0].InstanceDataStepRate = 0;
 
-	elements[1].AlignedByteOffset = sizeof(float) * 3;
+	/*elements[1].AlignedByteOffset = sizeof(float) * 3;
 	elements[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	elements[1].InputSlot = 0;
 	elements[1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
@@ -255,7 +256,7 @@ void HPass::RebuildPipelineStateObject()
 	elements[3].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 	elements[3].SemanticIndex = 0;
 	elements[3].SemanticName = "TEXCOORD";
-	elements[3].InstanceDataStepRate = 0;
+	elements[3].InstanceDataStepRate = 0;*/
 
 	if (m_RootSignature == nullptr) RebuildRootSignature();
 	psoDesc.pRootSignature = m_RootSignature.Get();
@@ -316,9 +317,14 @@ D3D12_DEPTH_STENCIL_DESC HPass::GetDepthStencilStatus() const
 	return m_DepthStencilStatus;
 }
 
-ID3D12PipelineState* HPass::GetGraphicsPSO() const
+ID3D12PipelineState* HPass::GetPipelineStateObject() const
 {
 	return m_PipelineState.Get();
+}
+
+ID3D12RootSignature* HPass::GetRootSignature() const
+{
+	return m_RootSignature.Get();
 }
 
 bool HPass::CheckVariableIsValidate(std::string variableName, size_t dataSize) const

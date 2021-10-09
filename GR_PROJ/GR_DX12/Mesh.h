@@ -17,6 +17,8 @@ public:
 	Mesh() = default;
 	virtual ~Mesh() = default;
 
+	static InterfaceID GetIID() { return IID_MESH; }
+	
 	void SetVectices(const std::vector<glm::vec3>& vertices);
 	void SetColors(const std::vector<glm::vec4>& colors);
 	void SetUv0s(const std::vector<glm::vec2>& uv0s);

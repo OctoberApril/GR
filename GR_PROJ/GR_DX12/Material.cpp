@@ -1,7 +1,6 @@
 #include "Material.h"
 #include "HPass.h"
 #include "Texture2D.h"
-#include <glm/fwd.hpp>
 #include <glm/detail/type_mat4x4.hpp>
 
 Material::Material(const wchar_t* vsShader, const wchar_t* psShader) : m_pHPass(std::move(new HPass(vsShader, psShader)))
@@ -43,4 +42,16 @@ void Material::SetTexture2D(std::string variableName, Texture2D* texture)
 	}
 	m_Texture2DVariableMap.emplace(variableName, texture);
 }
+
+ID3D12PipelineState* Material::GetPipelineStateObject() const
+{
+	return m_pHPass->GetPipelineStateObject();
+}
+
+ID3D12RootSignature* Material::GetRootSignature() const
+{
+	return m_pHPass->GetRootSignature();
+}
+
+
 

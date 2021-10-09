@@ -7,5 +7,7 @@ class Renderer : public Drawable
 {
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_RENDERER, Drawable)
+public:
+	static InterfaceID GetIID() { return IID_RENDERER; }
 };
 

@@ -41,7 +41,8 @@ public:
 	void SetDepthStencilStatus(CD3DX12_DEPTH_STENCIL_DESC depthStencilDesc);
 	D3D12_DEPTH_STENCIL_DESC GetDepthStencilStatus() const;
 
-	ID3D12PipelineState* GetGraphicsPSO() const;
+	ID3D12PipelineState* GetPipelineStateObject() const;
+	ID3D12RootSignature* GetRootSignature() const;
 
 	bool CheckVariableIsValidate(std::string variableName, size_t dataSize = 0) const;
 

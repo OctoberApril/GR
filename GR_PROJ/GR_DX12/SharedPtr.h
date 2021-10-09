@@ -5,7 +5,10 @@ class SharedPtr
 {
 public:
 	SharedPtr() :m_Ptr(nullptr) {}
-	explicit SharedPtr(T* ptr) :m_Ptr(ptr) {}
+	explicit SharedPtr(T* ptr) :m_Ptr(ptr)
+	{
+		AddRef();
+	}
 
 	SharedPtr(const SharedPtr<T>& other) :m_Ptr(other.m_Ptr)
 	{
@@ -18,16 +21,16 @@ public:
 	}
 
 	SharedPtr(SharedPtr<T>&& other) :m_Ptr(other.m_Ptr)
-	{
-		other.Release();
+	{		
 		AddRef();
+		other.Release();
 	}
 
 	template<typename U>
 	SharedPtr(SharedPtr<U>&& other) :m_Ptr(other.m_Ptr)
-	{
-		other.Release();
+	{		
 		AddRef();
+		other.Release();
 	}
 
 	~SharedPtr()
@@ -116,7 +119,7 @@ public:
 		return m_Ptr;
 	}
 
-	T** GetAddress() const
+	T** GetAddress()
 	{
 		return &m_Ptr;
 	}
@@ -124,6 +127,15 @@ public:
 	int  GetRefCount() const
 	{
 		return m_Ptr->GetRefCount();
+	}
+	
+	/// Perform a dynamic cast from a shared pointer of another type.
+	template <class U>
+	void DynamicCast(const SharedPtr<U>& rhs)
+	{
+		Release();
+		m_Ptr = dynamic_cast<T*>(rhs.Get());
+		AddRef();
 	}
 
 private:

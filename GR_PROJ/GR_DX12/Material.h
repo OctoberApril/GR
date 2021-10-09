@@ -1,4 +1,5 @@
 #pragma once
+#include <d3d12.h>
 #include <wrl.h>
 #include "HObject.h"
 #include<unordered_map>
@@ -18,12 +19,15 @@ public:
 public:
 	template<typename T>  using ComPtr = Microsoft::WRL::ComPtr<T>;
 	Material(const wchar_t* vsShader, const wchar_t* psShader);
-	~Material();
+	~Material() override;
 
 	void SetMatrix(std::string variableName, glm::mat4 matrix);
 	void SetTexture2D(std::string variableName, Texture2D* texture);
 
-private:
+	ID3D12RootSignature* GetRootSignature() const;
+	ID3D12PipelineState* GetPipelineStateObject() const;
+
+protected:
 	
 	std::unordered_map<std::string, glm::mat4> m_MatrixVariableMap;
 	std::unordered_map<std::string, SharedPtr<Texture2D>> m_Texture2DVariableMap;

@@ -14,6 +14,6 @@ struct InterfaceID
 		return this->Data1 == other.Data1 &&
 			this->Data2 == other.Data2 &&
 			this->Data3 == other.Data3 &&
-			memcpy((void*)Data4, other.Data4, sizeof(Data4)) == 0;
+			memcmp((void*)Data4, other.Data4, sizeof(Data4)) == 0;
 	}
 };

@@ -2,7 +2,7 @@
 
 
 void Mesh::SetVectices(const std::vector<glm::vec3>& vertices)
-{	
+{
 	m_Vertices = vertices;
 }
 

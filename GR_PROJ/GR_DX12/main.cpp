@@ -26,17 +26,17 @@ protected:
 void Sample::Setup()
 {
 	std::cout << "Sample Setup" << std::endl;
-	m_SampleScene = new Scene("Sample Scene");
-	
-	//Load Model
-	auto castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
-
-	int m = 0;
 }
 
 void Sample::Start()
 {
 	std::cout << "Sample Start" << std::endl;
+	
+	m_SampleScene = new Scene("Sample Scene");
+	//Load Model
+	//auto castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
+	auto castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
+	
 }
 
 void Sample::Stop()

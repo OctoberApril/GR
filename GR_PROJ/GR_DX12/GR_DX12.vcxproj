@@ -171,6 +171,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="DefaultMaterial.cpp" />
     <ClCompile Include="ReflectionTable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererSystem.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Noncopy.h" />
     <ClInclude Include="Pass.h" />
+    <ClInclude Include="DefaultMaterial.h" />
     <ClInclude Include="ReflectionTable.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererSystem.h" />

@@ -91,6 +91,12 @@
     <Filter Include="源文件\System">
       <UniqueIdentifier>{6dba830d-e0de-4e48-9fcf-46e28f596ce6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="头文件\Mats">
+      <UniqueIdentifier>{258206c6-a26e-4fbe-aaed-51062e7de794}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\Mats">
+      <UniqueIdentifier>{933058d9-62de-4e00-a716-137688e7c66f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPass.cpp">
@@ -176,6 +182,9 @@
     </ClCompile>
     <ClCompile Include="AssetImporter.cpp">
       <Filter>源文件\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultMaterial.cpp">
+      <Filter>源文件\Mats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -520,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="AssetImporter.h">
       <Filter>头文件\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultMaterial.h">
+      <Filter>头文件\Mats</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

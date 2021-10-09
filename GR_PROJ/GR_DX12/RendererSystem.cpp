@@ -2,7 +2,10 @@
 #include <cassert>
 #include <iostream>
 
+#include "Drawable.h"
+#include "GameObject.h"
 #include "Graphics.h"
+#include "MeshRenderer.h"
 #include "Scene.h"
 
 
@@ -52,6 +55,7 @@ void RendererSystem::Render()
 	rtvBarrier.Transition.pResource = rtvResource.Get();
 	m_CommandListBegin->ResourceBarrier(1, &rtvBarrier);
 
+	
 	m_CommandListBegin->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	D3D12_VIEWPORT viewPort = { 0,0,DX12Graphics::Instance->GetGraphicsWidth(),DX12Graphics::Instance->GetGraphicsHeight(),0,1 };
 	m_CommandListBegin->RSSetViewports(1, &viewPort);
@@ -67,7 +71,17 @@ void RendererSystem::Render()
 	cmds.emplace_back(m_CommandListBegin.Get());
 
 	//场景中可以渲染的物体 调用每个drawable接口的Draw函数 获得CommandList
-
+	auto objs = Scene::Default->GetRootGameObjects();
+	std::vector<Drawable*> drawables;
+	for(auto p = objs.begin();p != objs.end();p++)
+	{
+		std::vector<Drawable*> rets = (*p)->GetComponentsInChildren<Drawable>();
+		for(auto q = rets.begin();q != rets.end();q++)
+		{
+			cmds.emplace_back((*q)->Draw().Get());
+		}
+	}
+	
 	
 	//CommandEnd
 	m_CommandListEnd->Reset(m_CommandAllocator.Get(), nullptr);
