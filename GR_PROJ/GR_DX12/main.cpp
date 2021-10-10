@@ -2,10 +2,14 @@
 #include <iostream>
 
 #include "AssetImporter.h"
+#include "float2.h"
 #include "SharedPtr.h"
+#include "Input.h"
 
 #include "Scene.h"
 #include "ThirdCamera.h"
+#include "GameObject.h"
+#include "Graphics.h"
 
 class Sample : public Application
 {
@@ -16,11 +20,14 @@ protected:
 	void Start() override;
 	void Setup() override;
 	void Stop() override;
+	void Update() override;
 
 	template<typename T> using SharedPtr = ::SharedPtr<T>;	
 
 	SharedPtr<Scene> m_SampleScene;
-	SharedPtr<ThirdCamera> m_Camera;
+	ThirdCamera* m_Camera;
+	SharedPtr<GameObject> m_CameraObj;
+	SharedPtr<GameObject> m_Castle;
 };
 
 void Sample::Setup()
@@ -35,8 +42,69 @@ void Sample::Start()
 	m_SampleScene = new Scene("Sample Scene");
 	//Load Model
 	//auto castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
-	auto castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
-	
+	m_Castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
+
+	m_CameraObj = new GameObject();
+	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
+	m_Camera->SetCameraMode(CameraMode_Ortho);
+	m_Camera->SetOrthoCamera(-10, 10, 10, -10, -10, 10);
+}
+
+void Sample::Update()
+{
+	int w = DX12Graphics::Instance->GetGraphicsWidth();
+	int h = DX12Graphics::Instance->GetGraphicsHeight();
+	auto transform = m_CameraObj->transform();
+	auto m_Rotation = transform->GetRotation();
+	glm::vec3 m_Position = transform->GetPosition();
+
+	{
+		static float2 lastMousePosition = Input::Instance->GetMousePosition();
+
+		if (Input::Instance->GetMouseButton(0))
+		{
+			//对鼠标的移动 做绕y或者x旋转			
+			float2 currentMousePosition = Input::Instance->GetMousePosition();
+			float2 deltaMove = currentMousePosition - lastMousePosition;
+			lastMousePosition = currentMousePosition;
+
+			float xTheta = deltaMove.x / (w * 1.0f) * 3.1415927f * 0.5f;
+			float yTheta = deltaMove.y / (h * 1.0f) * 3.1415927f * 0.5f;
+
+			m_Rotation = glm::quat(glm::vec3(yTheta, xTheta, 0.0f)) * m_Rotation;
+			m_CameraObj->transform()->SetRotation(m_Rotation);
+
+			std::cout << m_Rotation.x << "		" << m_Rotation.y << "		" << m_Rotation.z << "		" << m_Rotation.w << std::endl;
+		}
+		else
+		{
+			lastMousePosition = Input::Instance->GetMousePosition();
+		}
+	}
+
+	if (Input::Instance->GetKey(KeyCode::W))
+	{
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-.0f, 0, .5f, 1);
+		transform->SetPosition(m_Position);
+	}
+
+	if (Input::Instance->GetKey(KeyCode::S))
+	{
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-.0f, 0, -.5f, 1);
+		transform->SetPosition(m_Position);
+	}
+
+	if (Input::Instance->GetKey(KeyCode::A))
+	{
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-1.5f, 0, 0, 1);
+		transform->SetPosition(m_Position);
+	}
+
+	if (Input::Instance->GetKey(KeyCode::D))
+	{
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(1.5f, 0, 0, 1);
+		transform->SetPosition(m_Position);
+	}
 }
 
 void Sample::Stop()

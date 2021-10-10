@@ -23,8 +23,11 @@ public:
 
 	glm::mat4 GetViewMatrix()const;
 	glm::mat4 GetPerspectiveMatrix() const;
+	void SetCameraMode(CameraMode mode);
+	
 
 private:
+	
 	//Perspective
 	float m_Fov, m_Aspect, m_NearPlane, m_FarPlane;
 

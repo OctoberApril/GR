@@ -68,6 +68,8 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 	D3D12_RECT sissorRect = { 0,0,DX12Graphics::Instance->GetGraphicsWidth(),DX12Graphics::Instance->GetGraphicsHeight() };
 	m_CommandList->RSSetScissorRects(1, &sissorRect);
 	m_CommandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+
+	//m_CommandList->SetGraphicsRootDescriptorTable()
 	
 	m_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_CommandList->SetGraphicsRootSignature(m_Material->GetRootSignature());

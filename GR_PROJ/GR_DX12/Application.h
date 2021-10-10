@@ -33,7 +33,12 @@ protected:
 
 	/// Cleanup after the main loop. Called by Application.
 	virtual void Stop();
-		
+
+	/// <summary>
+	/// temporary to run script
+	/// </summary>
+	virtual void Update();
+
 private:
 	
 	template<typename T> using SharedPtr = std::shared_ptr<T>;

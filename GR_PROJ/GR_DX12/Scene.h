@@ -6,6 +6,7 @@
 static const InterfaceID IID_SCENE = { 3,0,0,{0,0,0,0,0,0,0,0} };
 
 class GameObject;
+class ThirdCamera;
 
 class Scene : public HObject
 {
@@ -19,10 +20,14 @@ public:
 	void AddGameObjectToSceneRoot(GameObject* go);
 	void RemoveGameObjectFromScene(GameObject* go);
 	
+	ThirdCamera* GetSceneCamera() const;
+	void SetSceneCamera(ThirdCamera* camera);
+	
 	static InterfaceID GetIID();
 	static Scene* Default;
 private:
 
+	SharedPtr<ThirdCamera> m_ThirdCamera;
 	std::string m_SceneName;
 	std::vector<SharedPtr<GameObject>> m_RootGameObjects;
 };

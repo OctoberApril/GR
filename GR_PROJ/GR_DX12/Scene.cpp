@@ -1,5 +1,7 @@
 #include "Scene.h"
 #include "GameObject.h"
+#include "ThirdCamera.h"
+
 
 Scene* Scene::Default(new Scene("default scene"));
 
@@ -44,6 +46,19 @@ void Scene::RemoveGameObjectFromScene(GameObject* go)
 		}
 	}
 }
+
+ThirdCamera* Scene::GetSceneCamera() const
+{
+	return m_ThirdCamera;
+}
+
+void Scene::SetSceneCamera(ThirdCamera* camera)
+{
+	if (camera == nullptr) return;
+	m_ThirdCamera = camera;
+}
+
+
 
 
 

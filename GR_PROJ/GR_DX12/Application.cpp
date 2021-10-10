@@ -29,6 +29,7 @@ void Application::Run()
 		m_DX12GraphicsContext->Update();
 		m_InputContext->Update();
 
+		this->Update();
 		m_RendererContext->Render();
 		
 		m_Win32Context->LateUpdate();
@@ -53,6 +54,12 @@ void Application::Stop()
 {
 	
 }
+
+void Application::Update()
+{
+	
+}
+
 
 
 
