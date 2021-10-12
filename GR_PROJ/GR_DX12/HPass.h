@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <wrl.h>
-#include <unordered_set>
 #include <unordered_map>
 #include"d3dx12.h"
 #include "HObject.h"
@@ -9,11 +8,10 @@
 
 static const InterfaceID IID_HPASS = { 5,0,0,{0,0,0,0,0,0,0,0} };
 
-struct ReflectionTableHash;
-struct ReflectionTable;
-struct RootSignatureInfo;
-struct RootSignatureInfoHash;
 enum DescriptorType;
+struct ReflectionShaderVariableInfo;
+struct RootSignatureParameter;
+struct RootSignatureParameterHash;
 
 class HPass : HObject
 {
@@ -72,9 +70,9 @@ private:
 	ComPtr<ID3D12RootSignature> m_RootSignature;
 	ComPtr<ID3D12PipelineState> m_PipelineState;
 	
-	std::unordered_set<ReflectionTable, ReflectionTableHash> m_PassReflectTable;
-	std::unordered_map<std::string, int> m_Variable2RootSignatureIndex;
-	std::unordered_map<std::string, RootSignatureInfo, RootSignatureInfoHash> m_RootSignMap;
+	std::vector<ReflectionShaderVariableInfo> m_PassReflectionInfo;
+
+	std::unordered_map<std::string, RootSignatureParameter, RootSignatureParameterHash> m_RootParameterMap;
 	
 	static std::unordered_map<std::string, DescriptorType> g_PreDefineAccess;
 };

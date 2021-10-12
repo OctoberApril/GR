@@ -19,6 +19,19 @@ struct SubConstantVariableDesc
 	UINT                    TextureSize;    // Number of texture slots possibly used.
 	UINT                    StartSampler;   // First sampler index (or -1 if no textures used)
 	UINT                    SamplerSize;    // Number of sampler slots possibly used.
+
+	bool operator ==(const SubConstantVariableDesc& other) const
+	{
+		return this->Name == other.Name
+			&& this->StartOffset == other.StartOffset
+			&& this->Size == other.Size
+			&& this->uFlags == other.uFlags
+			&& this->DefaultValue == other.DefaultValue
+			&& this->StartTexture == other.StartTexture
+			&& this->TextureSize == other.TextureSize
+			&& this->StartSampler == other.StartSampler
+			&& this->SamplerSize == other.SamplerSize;
+	}
 };
 
 /// <summary>
@@ -26,19 +39,29 @@ struct SubConstantVariableDesc
 /// </summary>
 struct ConstantBufferDesc
 {
-	LPCSTR                  Name;           // Name of the constant buffer
+	std::string             Name;           // Name of the constant buffer
 	D3D_CBUFFER_TYPE        Type;           // Indicates type of buffer content
 	UINT                    Variables;      // Number of member variables
 	UINT                    Size;           // Size of CB (in bytes)
 	UINT                    uFlags;         // Buffer description flags
-	
+
 	std::vector<SubConstantVariableDesc> SubVariables; //存放子变量的偏移
+
+	bool operator ==(const ConstantBufferDesc& other) const
+	{
+		return this->Name == other.Name
+			&& this->Type == other.Type
+			&& this->Variables == other.Variables
+			&& this->Size == other.Size
+			&& this->uFlags == other.uFlags
+			&& this->SubVariables == other.SubVariables;
+	}
 };
 
 /// <summary>
 /// Ref D3D12_SHADER_INPUT_BIND_DESC
 /// </summary>
-struct ReflectShaderVariableInfo
+struct ReflectionShaderVariableInfo
 {
 	std::string VariableName;
 
@@ -57,6 +80,16 @@ struct ReflectShaderVariableInfo
 	unsigned int Space;
 
 	ConstantBufferDesc CBInfo;
+
+	bool operator ==(const ReflectionShaderVariableInfo& other) const
+	{
+		return this->VariableName == other.VariableName
+			&& this->Type == other.Type
+			&& this->BindPoint == other.BindPoint
+			&& this->BindCount == other.BindCount
+			&& this->Space == other.Space
+			&& this->CBInfo == other.CBInfo;
+	}
 };
 
 
@@ -90,7 +123,7 @@ struct DescriptorTableParameter
 	size_t DescriptorIncremental;
 };
 
-struct RootSignatureInfo
+struct RootSignatureParameter
 {
 	std::string VariableName;
 
@@ -106,9 +139,9 @@ struct RootSignatureInfo
 	};
 };
 
-struct RootSignatureInfoHash
+struct RootSignatureParameterHash
 {
-	std::size_t operator()(RootSignatureInfo t) const
+	std::size_t operator()(RootSignatureParameter t) const
 	{
 		return std::hash<std::string>()(t.VariableName);
 	}
