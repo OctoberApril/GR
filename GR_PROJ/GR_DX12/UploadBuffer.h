@@ -8,6 +8,7 @@ struct BufferAllocation
 {
 	void* CpuAddress;
 	D3D12_GPU_VIRTUAL_ADDRESS GpuAddress;
+	size_t Size;
 };
 
 class UploadBuffer
@@ -16,7 +17,7 @@ public:
 	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	template<typename T> using SharedPtr = std::shared_ptr<T>;
 public:
-	explicit UploadBuffer(size_t size = 1024 * 1024 * 10);
+	explicit UploadBuffer(size_t size = 1024 * 1024 * 2);
 	~UploadBuffer() = default;
 	
 	BufferAllocation Allocate(size_t size,int alignment);

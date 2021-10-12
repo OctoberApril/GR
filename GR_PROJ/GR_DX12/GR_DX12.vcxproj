@@ -23,7 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{d0f0eca3-fff8-4f0f-8ead-91d204136f94}</ProjectGuid>
     <RootNamespace>Win32Message</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <ProjectName>GR_DX12</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -83,7 +83,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>intermidiate\$(Platform)\$(Configuration)\</IntDir>
-    <LibraryPath>F:\Git_Projs\GR\GR_PROJ\GR_DX12\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -95,12 +95,17 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>d3d12.lib;dxgi.lib;d3dcompiler.lib;assimp-vc142-mt.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <CopyFileToFolders>
+      <DestinationFileName>%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>
+    </CopyFileToFolders>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>F:\Git_Projs\GR\GR_PROJ\GR_DX12\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,7 +177,6 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="DefaultMaterial.cpp" />
-    <ClCompile Include="ReflectionTable.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RendererSystem.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -211,7 +215,7 @@
     <ClInclude Include="Noncopy.h" />
     <ClInclude Include="Pass.h" />
     <ClInclude Include="DefaultMaterial.h" />
-    <ClInclude Include="ReflectionTable.h" />
+    <ClInclude Include="ShaderReflection.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererSystem.h" />
     <ClInclude Include="Scene.h" />

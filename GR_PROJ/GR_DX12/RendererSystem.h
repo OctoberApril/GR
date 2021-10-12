@@ -29,6 +29,8 @@ private:
 	ComPtr<ID3D12CommandAllocator> m_CommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> m_CommandListBegin;
 	ComPtr<ID3D12GraphicsCommandList> m_CommandListEnd;
+
+	
 	
 	ComPtr<ID3D12Fence> m_Fence;
 	HANDLE m_SyncEvent;

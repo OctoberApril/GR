@@ -2,14 +2,18 @@
 #include <string>
 #include <wrl.h>
 #include <unordered_set>
-
+#include <unordered_map>
 #include"d3dx12.h"
 #include "HObject.h"
-#include "ReflectionTable.h"
 
 
 static const InterfaceID IID_HPASS = { 5,0,0,{0,0,0,0,0,0,0,0} };
 
+struct ReflectionTableHash;
+struct ReflectionTable;
+struct RootSignatureInfo;
+struct RootSignatureInfoHash;
+enum DescriptorType;
 
 class HPass : HObject
 {
@@ -43,7 +47,8 @@ public:
 
 	ID3D12PipelineState* GetPipelineStateObject() const;
 	ID3D12RootSignature* GetRootSignature() const;
-
+	int GetVariableIndexInRootSignature(std::string variable_name) const;
+	
 	bool CheckVariableIsValidate(std::string variableName, size_t dataSize = 0) const;
 
 private:
@@ -60,7 +65,6 @@ private:
 	ComPtr<ID3DBlob> m_PSBlob;
 
 	
-
 	D3D12_BLEND_DESC m_BlendStatus;
 	D3D12_RASTERIZER_DESC m_RasterizerStatus;
 	D3D12_DEPTH_STENCIL_DESC m_DepthStencilStatus;
@@ -69,5 +73,9 @@ private:
 	ComPtr<ID3D12PipelineState> m_PipelineState;
 	
 	std::unordered_set<ReflectionTable, ReflectionTableHash> m_PassReflectTable;
+	std::unordered_map<std::string, int> m_Variable2RootSignatureIndex;
+	std::unordered_map<std::string, RootSignatureInfo, RootSignatureInfoHash> m_RootSignMap;
+	
+	static std::unordered_map<std::string, DescriptorType> g_PreDefineAccess;
 };
 

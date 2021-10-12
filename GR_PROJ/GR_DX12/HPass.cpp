@@ -6,7 +6,11 @@
 #include "Graphics.h"
 #include "Helper.h"
 #include "Win32App.h"
+#include "ReflectionTable.h"
+#include "RootSignatureInfo.h"
 
+
+std::unordered_map<std::string, DescriptorType> HPass::g_PreDefineAccess = { {"GlobalCameraMatrix", Descriptor} };
 
 HPass::HPass(
 	const wchar_t* vsShaderPath,
@@ -55,7 +59,7 @@ void HPass::RebuildPassReflectionTable()
 	ThrowIfFailed(D3DReflect(m_VSBlob->GetBufferPointer(), m_VSBlob->GetBufferSize(), IID_ID3D12ShaderReflection, reinterpret_cast<void**>(vsReflection.GetAddressOf())));
 	ThrowIfFailed(D3DReflect(m_PSBlob->GetBufferPointer(), m_PSBlob->GetBufferSize(), IID_ID3D12ShaderReflection, reinterpret_cast<void**>(psReflection.GetAddressOf())));
 
-	ReflectionTable vsTable = { ShaderStage_VS }, psTable = { ShaderStage_PS };
+	ReflectionTable vsTable = { ShaderStage_VS }, psTable = { ShaderStage_PS }, allTable = {ShaderStage_ALL};
 
 	D3D12_SHADER_DESC shaderDesc = {};
 	vsReflection->GetDesc(&shaderDesc);
@@ -66,15 +70,15 @@ void HPass::RebuildPassReflectionTable()
 
 		if (bindDesc.Type == D3D_SIT_TEXTURE)
 		{
-			vsTable.Texture2DMap.emplace(bindDesc.Name,ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
+			vsTable.Texture2DMap.emplace(bindDesc.Name, ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
 		}
 		else if (bindDesc.Type == D3D_SIT_SAMPLER)
 		{
-			vsTable.SamplerMap.emplace(bindDesc.Name,ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
+			vsTable.SamplerMap.emplace(bindDesc.Name, ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
 		}
 		else if (bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
 		{
-			vsTable.ConstantMap.emplace(bindDesc.Name,ConstantVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
+			vsTable.ConstantMap.emplace(bindDesc.Name, ConstantVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
 		}
 	}
 
@@ -106,15 +110,24 @@ void HPass::RebuildPassReflectionTable()
 
 		if (bindDesc.Type == D3D_SIT_TEXTURE)
 		{
-			psTable.Texture2DMap.emplace(bindDesc.Name,ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
+			psTable.Texture2DMap.emplace(bindDesc.Name, ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount,bindDesc.Space });
 		}
 		else if (bindDesc.Type == D3D_SIT_SAMPLER)
 		{
-			psTable.SamplerMap.emplace(bindDesc.Name,ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount ,bindDesc.Space });
+			psTable.SamplerMap.emplace(bindDesc.Name, ResourceVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount ,bindDesc.Space });
 		}
 		else if (bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
 		{
-			psTable.ConstantMap.emplace(bindDesc.Name,ConstantVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount ,bindDesc.Space });
+			auto vp = vsTable.ConstantMap.find(bindDesc.Name);
+			if(vp != vsTable.ConstantMap.end() && (vp->second.BindPoint == bindDesc.BindPoint) && (vp->second.BindCount == bindDesc.BindCount) && (vp->second.Space == bindDesc.Space) )
+			{
+				vsTable.ConstantMap.erase(vp);
+				allTable.ConstantMap.emplace(bindDesc.Name, ConstantVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount ,bindDesc.Space });
+			}
+			else
+			{
+				psTable.ConstantMap.emplace(bindDesc.Name, ConstantVariableInfo{ bindDesc.Name,bindDesc.BindPoint,bindDesc.BindCount ,bindDesc.Space });
+			}			
 		}
 	}
 
@@ -123,8 +136,14 @@ void HPass::RebuildPassReflectionTable()
 		auto pConstantInfo = psReflection->GetConstantBufferByIndex(i);
 		D3D12_SHADER_BUFFER_DESC bufferDesc = {};
 		pConstantInfo->GetDesc(&bufferDesc);
-
-		ConstantVariableInfo variableInfo = psTable.ConstantMap.find(bufferDesc.Name)->second;
+		
+		auto sp = psTable.ConstantMap.find(bufferDesc.Name);		
+		if(sp == psTable.ConstantMap.end())
+		{
+			sp = allTable.ConstantMap.find(bufferDesc.Name);			
+		}
+		
+		ConstantVariableInfo variableInfo = sp->second;
 		variableInfo.Type = bufferDesc.Type;
 		variableInfo.Size = bufferDesc.Size;
 		variableInfo.Variables = bufferDesc.Variables;
@@ -140,20 +159,23 @@ void HPass::RebuildPassReflectionTable()
 
 	m_PassReflectTable.emplace(vsTable);
 	m_PassReflectTable.emplace(psTable);
+	m_PassReflectTable.emplace(allTable);
 }
 
 void HPass::RebuildRootSignature()
 {
 	auto device = DX12Graphics::Instance->GetDevice();
 	assert(device != nullptr);
-
 	
-	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
 	int params = 0;
 	for (auto p = m_PassReflectTable.begin(); p != m_PassReflectTable.end(); p++)
 	{
-		params += (*p).ConstantMap.size() + (*p).Texture2DMap.size() + (*p).SamplerMap.size();
+
 	}
+
+	
+	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+	
 	CD3DX12_ROOT_PARAMETER* pParams = new CD3DX12_ROOT_PARAMETER[params];
 	rootSignatureDesc.Init(params, pParams, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -161,18 +183,19 @@ void HPass::RebuildRootSignature()
 	for (auto p = m_PassReflectTable.begin(); p != m_PassReflectTable.end(); p++)
 	{
 		ReflectionTable tbInfo = *p;
-		for (auto cb = tbInfo.ConstantMap.begin(); cb != tbInfo.ConstantMap.end(); cb++)
+		for (auto cb = tbInfo.ConstantMap.begin(); cb != tbInfo.ConstantMap.end(); cb++, index++)
 		{
 			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
 			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
 			pRange->NumDescriptors = 1;
 			pRange->BaseShaderRegister = cb->second.BindPoint;
-			pRange->RegisterSpace = cb->second.Space;			
+			pRange->RegisterSpace = cb->second.Space;
 			pRange->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			pParams[index++].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
+			pParams[index].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
+			m_Variable2RootSignatureIndex.emplace(cb->second.Name, index);
 		}
 
-		for (auto cb = tbInfo.Texture2DMap.begin(); cb != tbInfo.Texture2DMap.end(); cb++)
+		for (auto cb = tbInfo.Texture2DMap.begin(); cb != tbInfo.Texture2DMap.end(); cb++, index++)
 		{
 			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
 			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -180,10 +203,11 @@ void HPass::RebuildRootSignature()
 			pRange->BaseShaderRegister = cb->second.BindPoint;
 			pRange->RegisterSpace = cb->second.Space;
 			pRange->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			pParams[index++].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
+			pParams[index].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
+			m_Variable2RootSignatureIndex.emplace(cb->second.Name, index);
 		}
 
-		for (auto cb = tbInfo.SamplerMap.begin(); cb != tbInfo.SamplerMap.end(); cb++)
+		for (auto cb = tbInfo.SamplerMap.begin(); cb != tbInfo.SamplerMap.end(); cb++, index++)
 		{
 			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
 			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
@@ -191,20 +215,21 @@ void HPass::RebuildRootSignature()
 			pRange->BaseShaderRegister = cb->second.BindPoint;
 			pRange->RegisterSpace = cb->second.Space;
 			pRange->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			pParams[index++].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
+			pParams[index].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
+			m_Variable2RootSignatureIndex.emplace(cb->second.Name, index);
 		}
 	}
-		
+
 	ComPtr<ID3DBlob> rootSignatureBlob, rootSignatureErrorBlob;
 	ThrowIfFailed(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSignatureBlob.GetAddressOf(), rootSignatureErrorBlob.GetAddressOf()));
-	ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(m_RootSignature.GetAddressOf())));	
+	ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(m_RootSignature.GetAddressOf())));
 }
 
 void HPass::RebuildPipelineStateObject()
 {
 	auto device = DX12Graphics::Instance->GetDevice();
 	assert(device != nullptr);
-	
+
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 
 	psoDesc.VS = { m_VSBlob->GetBufferPointer(), m_VSBlob->GetBufferSize() };
@@ -327,17 +352,26 @@ ID3D12RootSignature* HPass::GetRootSignature() const
 	return m_RootSignature.Get();
 }
 
+int HPass::GetVariableIndexInRootSignature(std::string variable_name) const
+{
+	auto p = m_Variable2RootSignatureIndex.find(variable_name);
+	if (p != m_Variable2RootSignatureIndex.end())
+		return (*p).second;
+	
+	return -1;
+}
+
 bool HPass::CheckVariableIsValidate(std::string variableName, size_t dataSize) const
 {
-	for(auto p = m_PassReflectTable.begin();p != m_PassReflectTable.end();p++)
+	for (auto p = m_PassReflectTable.begin(); p != m_PassReflectTable.end(); p++)
 	{
 		auto stageInfo = *p;
 
-		for(auto v = stageInfo.ConstantMap.begin();v != stageInfo.ConstantMap.end();v++)
+		for (auto v = stageInfo.ConstantMap.begin(); v != stageInfo.ConstantMap.end(); v++)
 		{
-			for(int i = 0;i < v->second.Variables;i++)
+			for (int i = 0; i < v->second.Variables; i++)
 			{
-				if(v->second.SubVariables[i].SubName == variableName)
+				if (v->second.SubVariables[i].SubName == variableName)
 				{
 					return dataSize == v->second.SubVariables[i].Size;
 				}

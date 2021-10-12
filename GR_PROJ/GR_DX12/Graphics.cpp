@@ -4,7 +4,8 @@
 
 #include "d3dx12.h"
 #include "Helper.h"
-
+#include "DescriptorAllocator.h"
+#include "DescriptorAllocation.h"
 
 DX12Graphics* DX12Graphics::Instance = nullptr;
 
@@ -15,6 +16,11 @@ DX12Graphics::DX12Graphics(int w, int h)
 {
 	assert(Instance == nullptr);
 	Instance = this;
+
+	for(int i = 0;i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;i++)
+	{
+		m_DescriptorAllocators[i] = std::make_shared<DescriptorAllocator>(static_cast<D3D12_DESCRIPTOR_HEAP_TYPE>(i));
+	}
 }
 
 DX12Graphics::~DX12Graphics()
@@ -224,4 +230,17 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DX12Graphics::GetCurrentRtvResource() con
 	ComPtr<ID3D12Resource> backBuffer;
 	m_SwapChain->GetBuffer(m_GlobalFrame % 2, IID_PPV_ARGS(backBuffer.GetAddressOf()));
 	return backBuffer;
+}
+
+DescriptorAllocation DX12Graphics::AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t numDescriptors)
+{
+	return m_DescriptorAllocators[type]->Allocate(numDescriptors);
+}
+
+void DX12Graphics::ReleaseStaleDescriptors(uint64_t frame)
+{
+	for(auto p = m_DescriptorAllocators.begin();p != m_DescriptorAllocators.end();p++)
+	{
+		(*p)->ReleaseStaleDescriptors(frame);
+	}
 }

@@ -79,7 +79,8 @@ BufferAllocation UploadBuffer::UploadPage::Allocate(size_t size, int alignment)
 	BufferAllocation allocation;
 	allocation.CpuAddress = static_cast<uint8_t*>(CpuAddress) + m_Offset;
 	allocation.GpuAddress = GpuAddress + m_Offset;
-
+	allocation.Size = size;
+	
 	m_Offset += size;
 	return allocation;
 	

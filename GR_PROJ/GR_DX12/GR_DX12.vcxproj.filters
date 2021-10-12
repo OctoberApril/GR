@@ -156,9 +156,6 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ReflectionTable.cpp">
-      <Filter>源文件\Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Texture2D.cpp">
       <Filter>源文件\Renderer</Filter>
     </ClCompile>
@@ -503,7 +500,7 @@
     <ClInclude Include="d3dx12.h">
       <Filter>头文件\Win32</Filter>
     </ClInclude>
-    <ClInclude Include="ReflectionTable.h">
+    <ClInclude Include="ShaderReflection.h">
       <Filter>头文件\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Texture2D.h">

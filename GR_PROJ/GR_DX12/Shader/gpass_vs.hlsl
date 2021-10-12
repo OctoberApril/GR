@@ -13,11 +13,11 @@ struct VS_OUT
 	//float3 normal:NORMAL0;
 };
 
-//cbuffer matrixInfo : register(b0)
-//{
-//	float4x4 viewMat;
-//	float4x4 projMat;
-//};
+cbuffer GlobalCameraMatrix : register(b0)
+{
+	float4x4 viewMat;
+	float4x4 projMat;
+};
 
 VS_OUT main(VS_IN i)
 {

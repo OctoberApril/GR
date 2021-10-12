@@ -12,7 +12,7 @@ DescriptorAllocationPage::DescriptorAllocationPage(D3D12_DESCRIPTOR_HEAP_TYPE de
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.Type = descriptor_type;
 	heapDesc.NumDescriptors = descriptor_num;
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE; //Set Flag = None to later Copy to DynamicHeapDescriptorHeap
 	heapDesc.NodeMask = 0;
 
 	ThrowIfFailed(DX12Graphics::Instance->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_DescriptorHeap.GetAddressOf())));

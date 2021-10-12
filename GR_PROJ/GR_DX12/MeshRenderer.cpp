@@ -55,7 +55,7 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 		m_bInit = true;
 		std::cout << indices.size() / 3 << std::endl;
 	}
-
+	
 	m_CommandList->IASetVertexBuffers(0, 1, &m_VertexBufferView);
 	m_CommandList->IASetIndexBuffer(&m_IndexBufferView);	
 	
@@ -68,8 +68,13 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 	D3D12_RECT sissorRect = { 0,0,DX12Graphics::Instance->GetGraphicsWidth(),DX12Graphics::Instance->GetGraphicsHeight() };
 	m_CommandList->RSSetScissorRects(1, &sissorRect);
 	m_CommandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
-
+	
+	//RootParameter 是RootSignature中Parameter的Index
+	//GPU_Descritptor_Handle 是访问 Resource和 ViewDesc
 	//m_CommandList->SetGraphicsRootDescriptorTable()
+	//m_Device->CreateConstantBufferView()
+	//m_Device->CreateDescriptorHeap()
+	//SetMatrix中需要设置获取Matrix在RootSignature中Parameter的Index 如果是descriptor 需要使用device->Create相应的View将资源绑定到Descriptor中	
 	
 	m_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_CommandList->SetGraphicsRootSignature(m_Material->GetRootSignature());
