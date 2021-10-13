@@ -51,6 +51,12 @@ std::vector<uint32_t> Mesh::GetIndices() const
 	return m_Indices;
 }
 
+bool Mesh::IsEmpty() const
+{
+	return m_Indices.empty();
+}
+
+
 
 
 

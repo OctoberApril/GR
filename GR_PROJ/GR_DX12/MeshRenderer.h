@@ -17,9 +17,13 @@ public:
 	~MeshRenderer() override = default;
 	
 	ComPtr<ID3D12CommandList> Draw() override;
+	bool IsNeedToDraw() const override;
+	
 	void SetMaterial(Material* material);
 
 	static InterfaceID GetIID() { return IID_MESHRENDERER; }
+private:
+	void Initialize();
 
 private:
 	SharedPtr<Material> m_Material;

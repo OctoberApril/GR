@@ -10,35 +10,27 @@
 
 MeshRenderer::MeshRenderer() :m_Material(nullptr), m_CommandAllocator(nullptr), m_CommandList(nullptr), m_Device(nullptr), m_bInit(false),m_UploadBuffer(nullptr)
 {
+
+}
+
+void MeshRenderer::Initialize()
+{
 	m_Device = DX12Graphics::Instance->GetDevice();
 	assert(m_Device != nullptr);
 	m_UploadBuffer = new UploadBuffer();
-	
+
 	m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(m_CommandAllocator.GetAddressOf()));
 	m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_CommandAllocator.Get(), nullptr, IID_PPV_ARGS(m_CommandList.GetAddressOf()));
 	m_CommandList->Close();
-}
 
-
-Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
-{
-	m_CommandAllocator->Reset();
-	m_CommandList->Reset(m_CommandAllocator.Get(), nullptr);
-	
+	//初始化VertexBufferView和IndexBufferView 绑定static资源
 	Mesh* mesh = this->m_pGameObject->GetComponent<Mesh>();
 	assert(mesh != nullptr);
-	auto vertices = mesh->GetVertices();
-	auto indices = mesh->GetIndices();
-
-	if(vertices.size() == 0 || indices.size() == 0)
+	if(!mesh->IsEmpty())
 	{
-		m_CommandList->Close();
-		return m_CommandList;
-	}	
+		auto vertices = mesh->GetVertices();
+		auto indices = mesh->GetIndices();
 
-	//是否创建过VertexBuffer IndexBuffer 没有则创建
-	if(!m_bInit)
-	{
 		BufferAllocation verticesBuffer = m_UploadBuffer->Allocate(vertices.size() * sizeof(glm::vec3), 4);
 		BufferAllocation indicesBuffer = m_UploadBuffer->Allocate(indices.size() * sizeof(uint32_t), 4);
 
@@ -51,10 +43,25 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 		m_IndexBufferView.BufferLocation = indicesBuffer.GpuAddress;
 		m_IndexBufferView.SizeInBytes = indices.size() * sizeof(uint32_t);
 		m_IndexBufferView.Format = DXGI_FORMAT_R32_UINT;
-
-		m_bInit = true;
-		std::cout << indices.size() / 3 << std::endl;
 	}
+	
+	m_bInit = true;
+}
+
+bool MeshRenderer::IsNeedToDraw() const
+{
+	Mesh* mesh = this->m_pGameObject->GetComponent<Mesh>();
+	return !mesh->IsEmpty();
+}
+
+
+Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
+{
+	if (!m_bInit) Initialize();
+	Mesh* mesh = this->m_pGameObject->GetComponent<Mesh>();
+	
+	m_CommandAllocator->Reset();
+	m_CommandList->Reset(m_CommandAllocator.Get(), nullptr);
 	
 	m_CommandList->IASetVertexBuffers(0, 1, &m_VertexBufferView);
 	m_CommandList->IASetIndexBuffer(&m_IndexBufferView);	
@@ -69,17 +76,14 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 	m_CommandList->RSSetScissorRects(1, &sissorRect);
 	m_CommandList->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
 	
-	//RootParameter 是RootSignature中Parameter的Index
-	//GPU_Descritptor_Handle 是访问 Resource和 ViewDesc
-	//m_CommandList->SetGraphicsRootDescriptorTable()
-	//m_Device->CreateConstantBufferView()
-	//m_Device->CreateDescriptorHeap()
-	//SetMatrix中需要设置获取Matrix在RootSignature中Parameter的Index 如果是descriptor 需要使用device->Create相应的View将资源绑定到Descriptor中	
-	
 	m_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_CommandList->SetGraphicsRootSignature(m_Material->GetRootSignature());
 	m_CommandList->SetPipelineState(m_Material->GetPipelineStateObject());
-	m_CommandList->DrawIndexedInstanced(indices.size(), 1, 0, 0, 0);
+
+	//将注册进入Material中的变量每帧更新	
+	m_Material->Update(m_CommandList);
+	
+	m_CommandList->DrawIndexedInstanced(mesh->GetIndices().size(), 1, 0, 0, 0);
 	m_CommandList->Close();
 	
 	return m_CommandList;

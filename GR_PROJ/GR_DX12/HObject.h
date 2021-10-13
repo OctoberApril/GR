@@ -1,7 +1,9 @@
 #pragma once
+#include <wrl.h>
 #include "InterfaceID.h"
 #include "SharedPtr.h"
 #include "Noncopy.h"
+
 
 static const InterfaceID IID_OBJECT = { 0x00000000,0x0000,0x0000 ,{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00} };
 
@@ -35,7 +37,7 @@ class HObject : public Noncopy
 public:
 	HObject() :m_RefCount(0) {}
 	virtual ~HObject();
-
+	template<typename T>  using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	virtual void QueryInterface(const InterfaceID& iid, HObject** object);
 	

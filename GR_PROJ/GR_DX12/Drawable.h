@@ -16,5 +16,6 @@ public:
 	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	
 	virtual ComPtr<ID3D12CommandList> Draw() = 0;
+	virtual bool IsNeedToDraw() const = 0;
 };
 

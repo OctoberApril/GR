@@ -5,7 +5,6 @@
 #include <glm/vec4.hpp>
 #include "Component.h"
 
-
 static const InterfaceID IID_MESH = { 4,3,0,{0,0,0,0,0,0,0,0} };
 
 
@@ -30,6 +29,8 @@ public:
 	std::vector<glm::vec2> GetUv0s() const;
 	std::vector<glm::vec3> GetNormals() const;
 	std::vector<uint32_t>  GetIndices() const;
+
+	bool IsEmpty() const;
 
 private:
 	//position uv0  color normal

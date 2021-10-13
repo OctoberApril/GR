@@ -114,7 +114,7 @@ glm::mat4 Transform::GetLocalToWorldMatrix() const
 	auto T = glm::translate(glm::mat4(1), m_Position);
 
 	glm::mat4 TRS = S * R * T;
-	if (m_Parent == nullptr)
+	if (m_Parent != nullptr)
 		return m_Parent->GetLocalToWorldMatrix() * TRS;
 	else
 		return TRS;

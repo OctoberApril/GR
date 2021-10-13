@@ -38,7 +38,7 @@ void Sample::Setup()
 void Sample::Start()
 {
 	std::cout << "Sample Start" << std::endl;
-	
+
 	m_SampleScene = new Scene("Sample Scene");
 	//Load Model
 	//auto castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");

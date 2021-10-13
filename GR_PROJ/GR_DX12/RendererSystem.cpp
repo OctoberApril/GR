@@ -78,10 +78,12 @@ void RendererSystem::Render()
 		std::vector<Drawable*> rets = (*p)->GetComponentsInChildren<Drawable>();
 		for(auto q = rets.begin();q != rets.end();q++)
 		{
-			cmds.emplace_back((*q)->Draw().Get());
+			if((*q)->IsNeedToDraw())
+			{
+				cmds.emplace_back((*q)->Draw().Get());
+			}			
 		}
-	}
-	
+	}	
 	
 	//CommandEnd
 	m_CommandListEnd->Reset(m_CommandAllocator.Get(), nullptr);
