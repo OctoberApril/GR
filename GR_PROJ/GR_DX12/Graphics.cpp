@@ -239,8 +239,8 @@ DescriptorAllocation DX12Graphics::AllocateDescriptors(D3D12_DESCRIPTOR_HEAP_TYP
 
 void DX12Graphics::ReleaseStaleDescriptors(uint64_t frame)
 {
-	for(auto p = m_DescriptorAllocators.begin();p != m_DescriptorAllocators.end();p++)
+	for(int i = 0;i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES;i++)
 	{
-		(*p)->ReleaseStaleDescriptors(frame);
+		m_DescriptorAllocators[i]->ReleaseStaleDescriptors(frame);
 	}
 }

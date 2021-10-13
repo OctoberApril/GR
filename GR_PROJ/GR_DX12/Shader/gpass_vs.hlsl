@@ -22,8 +22,7 @@ cbuffer GlobalCameraMatrix : register(b0)
 VS_OUT main(VS_IN i)
 {
 	VS_OUT o;
-	o.worldPosition = float4(i.modelPosition.xyz, 1.0);
-	//o.worldPosition = mul(projMat, mul(viewMat, float4(i.modelPosition.xyz, 1.0)));
+	o.worldPosition = mul(projMat, mul(viewMat, float4(i.modelPosition.xyz, 1.0)));
 	//o.normal = i.normal;
 	//o.color = i.color;
 

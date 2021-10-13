@@ -1,7 +1,6 @@
 #pragma once
 #include <d3d12.h>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 
@@ -102,19 +101,32 @@ enum DescriptorType
 
 struct ConstantsParameter
 {
+	unsigned int ShaderRegister;
+
+	unsigned int RegisterSpace;
+
 	size_t Size;
 };
 
 struct DescriptorParameter
-{
+{	
+	unsigned int ShaderRegister;
+	
+	unsigned int RegisterSpace;
+
 	D3D12_GPU_VIRTUAL_ADDRESS BufferLocation;
 };
 
 struct DescriptorTableParameter
 {
-	D3D12_GPU_VIRTUAL_ADDRESS DescriptorTable;
+	unsigned int ShaderRegister;
+
+	unsigned int RegisterSpace;
+	
+	D3D12_GPU_VIRTUAL_ADDRESS BaseDescriptor;
 
 	D3D12_DESCRIPTOR_HEAP_TYPE HeapType;
+	D3D12_DESCRIPTOR_RANGE_TYPE RangeType;
 
 	size_t Offset; //在Descriptor中的偏移
 
@@ -131,6 +143,8 @@ struct RootSignatureParameter
 
 	D3D12_ROOT_PARAMETER_TYPE RootParameterType;
 
+	D3D12_SHADER_VISIBILITY ShaderVisibility;
+	
 	union
 	{
 		ConstantsParameter Constants;
@@ -141,8 +155,8 @@ struct RootSignatureParameter
 
 struct RootSignatureParameterHash
 {
-	std::size_t operator()(RootSignatureParameter t) const
-	{
+	size_t operator()(const RootSignatureParameter& t) const
+	{		
 		return std::hash<std::string>()(t.VariableName);
 	}
 };

@@ -4,14 +4,10 @@
 #include <unordered_map>
 #include"d3dx12.h"
 #include "HObject.h"
-
+#include "ShaderReflection.h"
 
 static const InterfaceID IID_HPASS = { 5,0,0,{0,0,0,0,0,0,0,0} };
 
-enum DescriptorType;
-struct ReflectionShaderVariableInfo;
-struct RootSignatureParameter;
-struct RootSignatureParameterHash;
 
 class HPass : HObject
 {
@@ -26,7 +22,6 @@ public:
 		CD3DX12_DEPTH_STENCIL_DESC depth_stencil = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT)
 	);
 	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
-
 
 	void SetVertexShader(const std::wstring& vsPath);
 	std::wstring GetVertexShaderPath() const;
@@ -46,8 +41,6 @@ public:
 	ID3D12PipelineState* GetPipelineStateObject() const;
 	ID3D12RootSignature* GetRootSignature() const;
 	int GetVariableIndexInRootSignature(std::string variable_name) const;
-	
-	bool CheckVariableIsValidate(std::string variableName, size_t dataSize = 0) const;
 
 private:
 	void RebuildShaderBlob();
@@ -72,7 +65,7 @@ private:
 	
 	std::vector<ReflectionShaderVariableInfo> m_PassReflectionInfo;
 
-	std::unordered_map<std::string, RootSignatureParameter, RootSignatureParameterHash> m_RootParameterMap;
+	std::unordered_map<std::string, RootSignatureParameter> m_RootParameterMap;
 	
 	static std::unordered_map<std::string, DescriptorType> g_PreDefineAccess;
 };

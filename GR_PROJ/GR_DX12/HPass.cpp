@@ -3,10 +3,11 @@
 
 #include "HPass.h"
 
+#include <algorithm>
+
 #include "Graphics.h"
 #include "Helper.h"
 #include "Win32App.h"
-#include "ShaderReflection.h"
 
 /// <summary>
 /// 全局预定义 非DescriptorTable的变量
@@ -63,107 +64,116 @@ void HPass::RebuildPassReflectionTable()
 	std::vector<ReflectionShaderVariableInfo> vsVariables, psVariables;
 
 	D3D12_SHADER_DESC shaderDesc = {};
-	vsReflection->GetDesc(&shaderDesc);
-	for (int i = 0; i < shaderDesc.BoundResources; i++)
-	{
-		D3D12_SHADER_INPUT_BIND_DESC bindDesc = {};
-		vsReflection->GetResourceBindingDesc(i, &bindDesc);
 
-		if (bindDesc.Type == D3D_SIT_TEXTURE || bindDesc.Type == D3D_SIT_SAMPLER
-			|| bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
+#pragma region 分析VSShader
+	{
+		vsReflection->GetDesc(&shaderDesc);
+		for (int i = 0; i < shaderDesc.BoundResources; i++)
 		{
-			ReflectionShaderVariableInfo info = {};
-			info.VariableName = bindDesc.Name;
-			info.Type = bindDesc.Type;
-			info.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			info.BindPoint = bindDesc.BindPoint;
-			info.BindCount = bindDesc.BindCount;
-			info.Space = bindDesc.Space;
+			D3D12_SHADER_INPUT_BIND_DESC bindDesc = {};
+			vsReflection->GetResourceBindingDesc(i, &bindDesc);
 
-			vsVariables.emplace_back(info);
-		}
-	}
-
-	for (int i = 0; i < shaderDesc.ConstantBuffers; i++)
-	{
-		auto pConstantInfo = vsReflection->GetConstantBufferByIndex(i);
-		D3D12_SHADER_BUFFER_DESC bufferDesc = {};
-		pConstantInfo->GetDesc(&bufferDesc);
-
-		auto iter = std::find_if(vsVariables.begin(), vsVariables.end(), [bufferDesc](const ReflectionShaderVariableInfo& info)
+			if (bindDesc.Type == D3D_SIT_TEXTURE || bindDesc.Type == D3D_SIT_SAMPLER
+				|| bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
 			{
-				return info.VariableName == bufferDesc.Name;
-			});
-		assert(iter != vsVariables.end());
+				ReflectionShaderVariableInfo info = {};
+				info.VariableName = bindDesc.Name;
+				info.Type = bindDesc.Type;
+				info.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+				info.BindPoint = bindDesc.BindPoint;
+				info.BindCount = bindDesc.BindCount;
+				info.Space = bindDesc.Space;
 
-		iter->CBInfo.Name = bufferDesc.Name;
-		iter->CBInfo.Type = bufferDesc.Type;
-		iter->CBInfo.Size = bufferDesc.Size;
-		iter->CBInfo.Variables = bufferDesc.Variables;
+				vsVariables.emplace_back(info);
+			}
+		}
 
-		for (int j = 0; j < bufferDesc.Variables; j++)
+		for (int i = 0; i < shaderDesc.ConstantBuffers; i++)
 		{
-			auto pReflectVariableInfo = pConstantInfo->GetVariableByIndex(j);
-			D3D12_SHADER_VARIABLE_DESC variableDesc = {};
-			pReflectVariableInfo->GetDesc(&variableDesc);
-			iter->CBInfo.SubVariables.push_back(SubConstantVariableDesc{
-				variableDesc.Name,variableDesc.StartOffset,variableDesc.Size,variableDesc.uFlags,
-				variableDesc.DefaultValue,variableDesc.StartTexture,variableDesc.TextureSize,
-				variableDesc.StartSampler,variableDesc.SamplerSize
+			auto pConstantInfo = vsReflection->GetConstantBufferByIndex(i);
+			D3D12_SHADER_BUFFER_DESC bufferDesc = {};
+			pConstantInfo->GetDesc(&bufferDesc);
+
+			auto iter = std::find_if(vsVariables.begin(), vsVariables.end(), [bufferDesc](const ReflectionShaderVariableInfo& info)
+				{
+					return info.VariableName == bufferDesc.Name;
 				});
-		}
-	}
+			assert(iter != vsVariables.end());
 
-	psReflection->GetDesc(&shaderDesc);
-	for (int i = 0; i < shaderDesc.BoundResources; i++)
-	{
-		D3D12_SHADER_INPUT_BIND_DESC bindDesc = {};
-		psReflection->GetResourceBindingDesc(i, &bindDesc);
+			iter->CBInfo.Name = bufferDesc.Name;
+			iter->CBInfo.Type = bufferDesc.Type;
+			iter->CBInfo.Size = bufferDesc.Size;
+			iter->CBInfo.Variables = bufferDesc.Variables;
 
-		if (bindDesc.Type == D3D_SIT_TEXTURE || bindDesc.Type == D3D_SIT_SAMPLER
-			|| bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
-		{
-			ReflectionShaderVariableInfo info = {};
-			info.VariableName = bindDesc.Name;
-			info.Type = bindDesc.Type;
-			info.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			info.BindPoint = bindDesc.BindPoint;
-			info.BindCount = bindDesc.BindCount;
-			info.Space = bindDesc.Space;
-
-			psVariables.emplace_back(info);
-		}
-	}
-
-	for (int i = 0; i < shaderDesc.ConstantBuffers; i++)
-	{
-		auto pConstantInfo = psReflection->GetConstantBufferByIndex(i);
-		D3D12_SHADER_BUFFER_DESC bufferDesc = {};
-		pConstantInfo->GetDesc(&bufferDesc);
-
-		auto iter = std::find_if(psVariables.begin(), psVariables.end(), [bufferDesc](const ReflectionShaderVariableInfo& info)
+			for (int j = 0; j < bufferDesc.Variables; j++)
 			{
-				return info.VariableName == bufferDesc.Name;
-			});
-		assert(iter != psVariables.end());
-
-		iter->CBInfo.Name = bufferDesc.Name;
-		iter->CBInfo.Type = bufferDesc.Type;
-		iter->CBInfo.Size = bufferDesc.Size;
-		iter->CBInfo.Variables = bufferDesc.Variables;
-
-		for (int j = 0; j < bufferDesc.Variables; j++)
-		{
-			auto pReflectVariableInfo = pConstantInfo->GetVariableByIndex(j);
-			D3D12_SHADER_VARIABLE_DESC variableDesc = {};
-			pReflectVariableInfo->GetDesc(&variableDesc);
-			iter->CBInfo.SubVariables.push_back(SubConstantVariableDesc{
-				variableDesc.Name,variableDesc.StartOffset,variableDesc.Size,variableDesc.uFlags,
-				variableDesc.DefaultValue,variableDesc.StartTexture,variableDesc.TextureSize,
-				variableDesc.StartSampler,variableDesc.SamplerSize
-				});
+				auto pReflectVariableInfo = pConstantInfo->GetVariableByIndex(j);
+				D3D12_SHADER_VARIABLE_DESC variableDesc = {};
+				pReflectVariableInfo->GetDesc(&variableDesc);
+				iter->CBInfo.SubVariables.push_back(SubConstantVariableDesc{
+					variableDesc.Name,variableDesc.StartOffset,variableDesc.Size,variableDesc.uFlags,
+					variableDesc.DefaultValue,variableDesc.StartTexture,variableDesc.TextureSize,
+					variableDesc.StartSampler,variableDesc.SamplerSize
+					});
+			}
 		}
 	}
+#pragma endregion
+
+#pragma region 分析PixelShader
+	{
+		psReflection->GetDesc(&shaderDesc);
+		for (int i = 0; i < shaderDesc.BoundResources; i++)
+		{
+			D3D12_SHADER_INPUT_BIND_DESC bindDesc = {};
+			psReflection->GetResourceBindingDesc(i, &bindDesc);
+
+			if (bindDesc.Type == D3D_SIT_TEXTURE || bindDesc.Type == D3D_SIT_SAMPLER
+				|| bindDesc.Type == D3D_SIT_CBUFFER || bindDesc.Type == D3D_SIT_TBUFFER)
+			{
+				ReflectionShaderVariableInfo info = {};
+				info.VariableName = bindDesc.Name;
+				info.Type = bindDesc.Type;
+				info.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+				info.BindPoint = bindDesc.BindPoint;
+				info.BindCount = bindDesc.BindCount;
+				info.Space = bindDesc.Space;
+
+				psVariables.emplace_back(info);
+			}
+		}
+
+		for (int i = 0; i < shaderDesc.ConstantBuffers; i++)
+		{
+			auto pConstantInfo = psReflection->GetConstantBufferByIndex(i);
+			D3D12_SHADER_BUFFER_DESC bufferDesc = {};
+			pConstantInfo->GetDesc(&bufferDesc);
+
+			auto iter = std::find_if(psVariables.begin(), psVariables.end(), [bufferDesc](const ReflectionShaderVariableInfo& info)
+				{
+					return info.VariableName == bufferDesc.Name;
+				});
+			assert(iter != psVariables.end());
+
+			iter->CBInfo.Name = bufferDesc.Name;
+			iter->CBInfo.Type = bufferDesc.Type;
+			iter->CBInfo.Size = bufferDesc.Size;
+			iter->CBInfo.Variables = bufferDesc.Variables;
+
+			for (int j = 0; j < bufferDesc.Variables; j++)
+			{
+				auto pReflectVariableInfo = pConstantInfo->GetVariableByIndex(j);
+				D3D12_SHADER_VARIABLE_DESC variableDesc = {};
+				pReflectVariableInfo->GetDesc(&variableDesc);
+				iter->CBInfo.SubVariables.push_back(SubConstantVariableDesc{
+					variableDesc.Name,variableDesc.StartOffset,variableDesc.Size,variableDesc.uFlags,
+					variableDesc.DefaultValue,variableDesc.StartTexture,variableDesc.TextureSize,
+					variableDesc.StartSampler,variableDesc.SamplerSize
+					});
+			}
+		}
+	}
+#pragma endregion
 
 	m_PassReflectionInfo.insert(m_PassReflectionInfo.end(), vsVariables.begin(), vsVariables.end());
 
@@ -187,8 +197,9 @@ void HPass::RebuildRootSignature()
 	assert(device != nullptr);
 
 
-	int paramIndex = 0;
 	std::vector<ReflectionShaderVariableInfo> passVariables = m_PassReflectionInfo;
+	std::vector<RootSignatureParameter> rootParameters;
+
 	for (auto p = g_PreDefineAccess.begin(); p != g_PreDefineAccess.end(); p++)
 	{
 		auto iter = std::find_if(passVariables.begin(), passVariables.end(), [p](const ReflectionShaderVariableInfo& lhs)
@@ -197,10 +208,12 @@ void HPass::RebuildRootSignature()
 			});
 
 		if (iter != passVariables.end())
-		{			
+		{
 			RootSignatureParameter parameter = {};
 			parameter.VariableName = iter->VariableName;
-			parameter.ParameterIndex = paramIndex++;
+			parameter.ParameterIndex = rootParameters.size();
+			parameter.ShaderVisibility = iter->ShaderVisibility;
+			
 			if (p->second == Descriptor)
 			{
 				if (iter->Type == D3D_SIT_TEXTURE)
@@ -210,66 +223,148 @@ void HPass::RebuildRootSignature()
 				else
 					parameter.RootParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			}
-			else if(p->second == Constants)
+			else if (p->second == Constants)
 			{
 				parameter.RootParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
 			}
 			else
 				parameter.RootParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			m_RootParameterMap.emplace(iter->VariableName, parameter);
+
+			if (parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS)
+			{
+				parameter.Constants.ShaderRegister = iter->BindPoint;
+				parameter.Constants.RegisterSpace = iter->Space;
+			}
+			else if (parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_CBV
+				|| parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_SRV)
+			{
+				parameter.Descriptor.ShaderRegister = iter->BindPoint;
+				parameter.Descriptor.RegisterSpace = iter->Space;
+			}
+
+			rootParameters.emplace_back(parameter);
 			passVariables.erase(iter);
 		}
 	}
 
 	//对剩余的进行排序 ShaderVisibility->CBV|Texture2D|Sampler
+	std::sort(passVariables.begin(), passVariables.end(), [](const ReflectionShaderVariableInfo& lhs, const ReflectionShaderVariableInfo& rhs)->bool
+		{
+			return (lhs.ShaderVisibility < rhs.ShaderVisibility) || (lhs.Type < rhs.Type);
+		});
 
-
-	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-
-	CD3DX12_ROOT_PARAMETER* pParams = new CD3DX12_ROOT_PARAMETER[params];
-	rootSignatureDesc.Init(params, pParams, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
-
-	int index = 0;
-	for (auto p = m_PassReflectTable.begin(); p != m_PassReflectTable.end(); p++)
+	for (auto p = passVariables.begin(); p != passVariables.end(); p++)
 	{
-		ReflectionTable tbInfo = *p;
-		for (auto cb = tbInfo.ConstantMap.begin(); cb != tbInfo.ConstantMap.end(); cb++, index++)
+		RootSignatureParameter parameter = {};
+		parameter.VariableName = p->VariableName;
+		parameter.RootParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		parameter.ShaderVisibility = p->ShaderVisibility;
+		parameter.DescriptorTable.Size = p->BindCount;
+		parameter.DescriptorTable.ShaderRegister = p->BindPoint;
+		parameter.DescriptorTable.RegisterSpace = p->Space;
+
+		if (p->Type == D3D_SIT_TEXTURE)
 		{
-			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
-			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-			pRange->NumDescriptors = 1;
-			pRange->BaseShaderRegister = cb->second.BindPoint;
-			pRange->RegisterSpace = cb->second.Space;
-			pRange->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			pParams[index].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
-			m_Variable2RootSignatureIndex.emplace(cb->second.Name, index);
+			parameter.DescriptorTable.HeapType = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+			parameter.DescriptorTable.DescriptorIncremental = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			parameter.DescriptorTable.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		}
+		else if(p->Type == D3D_SIT_CBUFFER || p->Type == D3D_SIT_TBUFFER)
+		{
+			parameter.DescriptorTable.HeapType = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+			parameter.DescriptorTable.DescriptorIncremental = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+			parameter.DescriptorTable.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+		}
+		else if (p->Type == D3D_SIT_SAMPLER)
+		{
+			parameter.DescriptorTable.HeapType = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+			parameter.DescriptorTable.DescriptorIncremental = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+			parameter.DescriptorTable.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
 		}
 
-		for (auto cb = tbInfo.Texture2DMap.begin(); cb != tbInfo.Texture2DMap.end(); cb++, index++)
+		//和上一个存放的root比较是否可以合并
+		if (rootParameters.size() <= 0)
 		{
-			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
-			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-			pRange->NumDescriptors = 1;
-			pRange->BaseShaderRegister = cb->second.BindPoint;
-			pRange->RegisterSpace = cb->second.Space;
-			pRange->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			pParams[index].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
-			m_Variable2RootSignatureIndex.emplace(cb->second.Name, index);
+			parameter.ParameterIndex = rootParameters.size();
+			parameter.DescriptorTable.Offset = 0;
+		}
+		else
+		{
+			if (rootParameters[rootParameters.size() - 1].RootParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE
+				|| rootParameters[rootParameters.size() - 1].DescriptorTable.HeapType == parameter.DescriptorTable.HeapType)
+			{
+				parameter.ParameterIndex = rootParameters[rootParameters.size() - 1].ParameterIndex;
+				parameter.DescriptorTable.Offset = rootParameters[rootParameters.size() - 1].DescriptorTable.Offset + rootParameters[rootParameters.size() - 1].DescriptorTable.Size;
+			}
+			else
+			{
+				parameter.ParameterIndex = rootParameters.size();
+				parameter.DescriptorTable.Offset = 0;
+			}
 		}
 
-		for (auto cb = tbInfo.SamplerMap.begin(); cb != tbInfo.SamplerMap.end(); cb++, index++)
-		{
-			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE();
-			pRange->RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER;
-			pRange->NumDescriptors = 1;
-			pRange->BaseShaderRegister = cb->second.BindPoint;
-			pRange->RegisterSpace = cb->second.Space;
-			pRange->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-			pParams[index].InitAsDescriptorTable(1, pRange, tbInfo.Stage == ShaderStage_VS ? D3D12_SHADER_VISIBILITY_VERTEX : D3D12_SHADER_VISIBILITY_PIXEL);
-			m_Variable2RootSignatureIndex.emplace(cb->second.Name, index);
-		}
+		rootParameters.emplace_back(parameter);
 	}
 
+	
+	//根据parameterIndex 归纳信息
+	std::unordered_map<int, std::vector<RootSignatureParameter>> rootSignatureMap;
+	for(auto p = rootParameters.begin();p != rootParameters.end();p++)
+	{		
+		rootSignatureMap[p->ParameterIndex].emplace_back(*p);
+		m_RootParameterMap.emplace(p->VariableName, *p);
+	}
+	
+	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+	CD3DX12_ROOT_PARAMETER* pParams = new CD3DX12_ROOT_PARAMETER[rootSignatureMap.size()];
+	rootSignatureDesc.Init(rootSignatureMap.size(), pParams, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+	for(auto p = rootSignatureMap.begin();p != rootSignatureMap.end();p++)
+	{
+		auto parameter = p->second[0];
+		if(parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS)
+		{
+			pParams[parameter.ParameterIndex].InitAsConstants(parameter.Constants.Size,
+				parameter.Constants.ShaderRegister,
+				parameter.Constants.RegisterSpace,
+				parameter.ShaderVisibility);
+		}
+		else if (parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_CBV)
+		{
+			pParams[parameter.ParameterIndex].InitAsConstantBufferView(parameter.Descriptor.ShaderRegister,
+				parameter.Descriptor.RegisterSpace,
+				parameter.ShaderVisibility);
+		}
+		else if (parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_SRV)
+		{
+			pParams[parameter.ParameterIndex].InitAsShaderResourceView(parameter.Descriptor.ShaderRegister,
+				parameter.Descriptor.RegisterSpace,
+				parameter.ShaderVisibility);
+		}
+		else if (parameter.RootParameterType == D3D12_ROOT_PARAMETER_TYPE_UAV)
+		{
+			pParams[parameter.ParameterIndex].InitAsUnorderedAccessView(parameter.Descriptor.ShaderRegister,
+				parameter.Descriptor.RegisterSpace,
+				parameter.ShaderVisibility);
+		}
+		else 
+		{
+			//处理DescriptorTable情况
+			D3D12_DESCRIPTOR_RANGE* pRange = new D3D12_DESCRIPTOR_RANGE[p->second.size()];
+
+			for(int j = 0;j < p->second.size();j++)
+			{
+				pRange[j].BaseShaderRegister = p->second[j].DescriptorTable.ShaderRegister;
+				pRange[j].RegisterSpace = p->second[j].DescriptorTable.RegisterSpace;
+				pRange[j].NumDescriptors = p->second[j].DescriptorTable.Size;
+				pRange[j].OffsetInDescriptorsFromTableStart = p->second[j].DescriptorTable.Offset;
+				pRange[j].RangeType = p->second[j].DescriptorTable.RangeType;
+			}
+			
+			pParams[parameter.ParameterIndex].InitAsDescriptorTable(p->second.size(), pRange, parameter.ShaderVisibility);
+		}
+	}
+	
 	ComPtr<ID3DBlob> rootSignatureBlob, rootSignatureErrorBlob;
 	ThrowIfFailed(D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, rootSignatureBlob.GetAddressOf(), rootSignatureErrorBlob.GetAddressOf()));
 	ThrowIfFailed(device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(m_RootSignature.GetAddressOf())));
@@ -404,37 +499,11 @@ ID3D12RootSignature* HPass::GetRootSignature() const
 
 int HPass::GetVariableIndexInRootSignature(std::string variable_name) const
 {
-	auto p = m_Variable2RootSignatureIndex.find(variable_name);
-	if (p != m_Variable2RootSignatureIndex.end())
-		return (*p).second;
+	auto p = m_RootParameterMap.find(variable_name);
+	if (p != m_RootParameterMap.end())
+		return p->second.ParameterIndex;
 
 	return -1;
-}
-
-bool HPass::CheckVariableIsValidate(std::string variableName, size_t dataSize) const
-{
-	for (auto p = m_PassReflectTable.begin(); p != m_PassReflectTable.end(); p++)
-	{
-		auto stageInfo = *p;
-
-		for (auto v = stageInfo.ConstantMap.begin(); v != stageInfo.ConstantMap.end(); v++)
-		{
-			for (int i = 0; i < v->second.Variables; i++)
-			{
-				if (v->second.SubVariables[i].SubName == variableName)
-				{
-					return dataSize == v->second.SubVariables[i].Size;
-				}
-			}
-		}
-
-		//Sampler和Texture2D对数据的大小没有验证需求		
-		auto t0 = stageInfo.SamplerMap.find(variableName);
-		if (t0 != stageInfo.SamplerMap.end()) return true;
-
-		auto t1 = stageInfo.Texture2DMap.find(variableName);
-		if (t1 != stageInfo.Texture2DMap.end()) return true;
-	}
 }
 
 

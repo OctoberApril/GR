@@ -48,7 +48,7 @@ private:
 	ComPtr<ID3D12CommandQueue> m_GraphicsCommandQueue;
 	ComPtr<IDXGISwapChain1> m_SwapChain;
 
-	std::vector<std::shared_ptr<DescriptorAllocator>> m_DescriptorAllocators;
+	std::shared_ptr<DescriptorAllocator> m_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
 	ComPtr<ID3D12DescriptorHeap> m_RtvDescriptorHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvDescriptorHeap;
