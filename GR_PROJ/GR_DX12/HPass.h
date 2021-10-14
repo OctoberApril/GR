@@ -1,19 +1,16 @@
 #pragma once
 #include <string>
-#include <wrl.h>
 #include <unordered_map>
+#include <wrl.h>
 #include"d3dx12.h"
-#include "HObject.h"
 #include "ShaderReflection.h"
 
-static const InterfaceID IID_HPASS = { 5,0,0,{0,0,0,0,0,0,0,0} };
 
-
-class HPass : HObject
+class HPass
 {
 public:
-	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_HPASS, HObject)
-public:
+	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
+	
 	HPass(
 		const wchar_t* vsShaderPath,
 		const wchar_t* psShaderPath,
@@ -21,7 +18,6 @@ public:
 		CD3DX12_RASTERIZER_DESC rasterizer = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT),
 		CD3DX12_DEPTH_STENCIL_DESC depth_stencil = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT)
 	);
-	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 	void SetVertexShader(const std::wstring& vsPath);
 	std::wstring GetVertexShaderPath() const;
@@ -40,13 +36,14 @@ public:
 
 	ID3D12PipelineState* GetPipelineStateObject() const;
 	ID3D12RootSignature* GetRootSignature() const;
-	int GetVariableIndexInRootSignature(std::string variable_name) const;
+	
+	std::unordered_map<std::string, RootSignatureParameter> GetPassRootSignatureParameters() const;
 
 private:
 	void RebuildShaderBlob();
 	void RebuildPassReflectionTable();
 	void RebuildRootSignature();
-	void RebuildPipelineStateObject();
+	void RebuildPipelineStateObject();	
 
 private:
 	std::wstring m_VSShaderPath;

@@ -2,6 +2,7 @@
 #include <memory>
 
 
+class GlobalShaderUniformSystem;
 class Win32App;
 class DX12Graphics;
 class Input;
@@ -47,6 +48,7 @@ private:
 	SharedPtr<DX12Graphics> m_DX12GraphicsContext;
 	SharedPtr<Input> m_InputContext;
 	SharedPtr<RendererSystem> m_RendererContext;
+	SharedPtr<GlobalShaderUniformSystem> m_GlobalShaderUniformSystem;
 	
 	const char* m_AppName;
 	int m_iWidth;

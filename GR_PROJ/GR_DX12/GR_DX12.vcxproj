@@ -166,6 +166,7 @@
     <ClCompile Include="DescriptorAllocator.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GlobalShaderUniformSystem.cpp" />
     <ClCompile Include="GPass.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="HObject.cpp" />
@@ -200,6 +201,7 @@
     <ClInclude Include="float3.h" />
     <ClInclude Include="float4.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GlobalShaderUniformSystem.h" />
     <ClInclude Include="GPass.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Helper.h" />
@@ -219,6 +221,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="RendererSystem.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ShaderUniform.h" />
     <ClInclude Include="SharedPtr.h" />
     <ClInclude Include="Texture2D.h" />
     <ClInclude Include="ThirdCamera.h" />

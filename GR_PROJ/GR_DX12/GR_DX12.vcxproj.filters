@@ -97,6 +97,12 @@
     <Filter Include="源文件\Mats">
       <UniqueIdentifier>{933058d9-62de-4e00-a716-137688e7c66f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Misc">
+      <UniqueIdentifier>{3db5ebf0-1b14-4413-b1eb-465240e29ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\Misc">
+      <UniqueIdentifier>{a713cd27-b90e-40a5-86f9-a3be7c6de0de}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GPass.cpp">
@@ -182,6 +188,9 @@
     </ClCompile>
     <ClCompile Include="DefaultMaterial.cpp">
       <Filter>源文件\Mats</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalShaderUniformSystem.cpp">
+      <Filter>源文件\Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -529,6 +538,12 @@
     </ClInclude>
     <ClInclude Include="DefaultMaterial.h">
       <Filter>头文件\Mats</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalShaderUniformSystem.h">
+      <Filter>头文件\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderUniform.h">
+      <Filter>头文件\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

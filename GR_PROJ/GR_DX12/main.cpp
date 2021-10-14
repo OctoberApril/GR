@@ -62,8 +62,7 @@ void Sample::Update()
 		static float2 lastMousePosition = Input::Instance->GetMousePosition();
 
 		if (Input::Instance->GetMouseButton(0))
-		{
-			//�������ƶ� ����y����x��ת			
+		{		
 			float2 currentMousePosition = Input::Instance->GetMousePosition();
 			float2 deltaMove = currentMousePosition - lastMousePosition;
 			lastMousePosition = currentMousePosition;

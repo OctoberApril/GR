@@ -10,6 +10,8 @@ public:
 public:
 	DefaultMaterial() :Material(L"./Shader/gpass_vs.hlsl", L"./Shader/gpass_ps.hlsl") {}
 
+	void BindResources() override;
+	
 	static InterfaceID GetIID() { return IID_DEFAULT_MATERIAL; }
 };
 

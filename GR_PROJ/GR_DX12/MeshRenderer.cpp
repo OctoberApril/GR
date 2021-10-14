@@ -2,10 +2,12 @@
 
 #include <iostream>
 
+#include "d3dx12.h"
 #include "GameObject.h"
 #include "Material.h"
 #include "Graphics.h"
 #include "Mesh.h"
+#include "ShaderUniform.h"
 #include "UploadBuffer.h"
 
 MeshRenderer::MeshRenderer() :m_Material(nullptr), m_CommandAllocator(nullptr), m_CommandList(nullptr), m_Device(nullptr), m_bInit(false),m_UploadBuffer(nullptr)
@@ -19,6 +21,23 @@ void MeshRenderer::Initialize()
 	assert(m_Device != nullptr);
 	m_UploadBuffer = new UploadBuffer();
 
+	int id = m_Material->GetParameterIndex("HHQ_MATRIX_Model");
+	if (id != -1)
+	{
+		RootSignatureTableBindItem item = {};
+		item.ParameterIndex = id;
+		item.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+
+		ComPtr<ID3D12Resource> resource;
+		auto heapPropertiesDesc = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+		auto resourceDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(glm::mat4));
+		m_Device->CreateCommittedResource(&heapPropertiesDesc, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(resource.GetAddressOf()));		
+		item.BufferLocation = resource->GetGPUVirtualAddress();
+
+		m_LocalUniformBindMap.emplace("HHQ_MATRIX_Model", item);
+		m_LocalUniformBufferMap.emplace("HHQ_MATRIX_Model", resource);
+	}
+	
 	m_Device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(m_CommandAllocator.GetAddressOf()));
 	m_Device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, m_CommandAllocator.Get(), nullptr, IID_PPV_ARGS(m_CommandList.GetAddressOf()));
 	m_CommandList->Close();
@@ -80,8 +99,27 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 	m_CommandList->SetGraphicsRootSignature(m_Material->GetRootSignature());
 	m_CommandList->SetPipelineState(m_Material->GetPipelineStateObject());
 
-	//将注册进入Material中的变量每帧更新	
-	m_Material->Update(m_CommandList);
+	//绑定
+	auto rsTable = m_Material->GetRootSignatureTable();
+	for(int i = 0;i < rsTable.size();i++)
+	{
+		if(rsTable[i].ParameterType == D3D12_ROOT_PARAMETER_TYPE_CBV)			
+		{
+			m_CommandList->SetGraphicsRootConstantBufferView(rsTable[i].ParameterIndex, rsTable[i].BufferLocation);
+		}
+		else if(rsTable[i].ParameterType == D3D12_ROOT_PARAMETER_TYPE_SRV)
+		{
+			m_CommandList->SetGraphicsRootShaderResourceView(rsTable[i].ParameterIndex, rsTable[i].BufferLocation);
+		}
+		else if(rsTable[i].ParameterType == D3D12_ROOT_PARAMETER_TYPE_UAV)
+		{
+			m_CommandList->SetGraphicsRootUnorderedAccessView(rsTable[i].ParameterIndex, rsTable[i].BufferLocation);
+		}
+		else if(rsTable[i].ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
+		{
+			m_CommandList->SetGraphicsRootDescriptorTable(rsTable[i].ParameterIndex, rsTable[i].DescriptorHandle);
+		}
+	}
 	
 	m_CommandList->DrawIndexedInstanced(mesh->GetIndices().size(), 1, 0, 0, 0);
 	m_CommandList->Close();

@@ -12,15 +12,16 @@ DescriptorAllocationPage::DescriptorAllocationPage(D3D12_DESCRIPTOR_HEAP_TYPE de
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 	heapDesc.Type = descriptor_type;
 	heapDesc.NumDescriptors = descriptor_num;
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE; //Set Flag = None to later Copy to DynamicHeapDescriptorHeap
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE; //Set Flag = None to later Copy to DynamicHeapDescriptorHeap
 	heapDesc.NodeMask = 0;
 
 	ThrowIfFailed(DX12Graphics::Instance->GetDevice()->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(m_DescriptorHeap.GetAddressOf())));
 	DESCRIPTOR_INCREMENT_SIZE = DX12Graphics::Instance->GetDevice()->GetDescriptorHandleIncrementSize(descriptor_type);
 
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-
-	DescriptorAllocation allocation(cpuHandle, descriptor_num, DESCRIPTOR_INCREMENT_SIZE, this);
+	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_DescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	
+	DescriptorAllocation allocation(cpuHandle, gpuHandle, descriptor_num, DESCRIPTOR_INCREMENT_SIZE, this);
 	allocation.parent = 0;
 	allocation.next = descriptor_num;
 
@@ -38,13 +39,16 @@ DescriptorAllocation DescriptorAllocationPage::Allocate(size_t descriptor_num)
 	auto cur_block = std::find(m_AvaliableBlocks.begin(), m_AvaliableBlocks.end(), descriptor_num);
 	assert(cur_block != m_AvaliableBlocks.end());
 
-	DescriptorAllocation use_block = { cur_block->CPU,descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
+	DescriptorAllocation use_block = { cur_block->CPU,cur_block->GPU,descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
 	use_block.parent = cur_block->parent;
 	use_block.next = use_block.parent + descriptor_num;
 
 	D3D12_CPU_DESCRIPTOR_HANDLE newCpuHandle = cur_block->CPU;
 	newCpuHandle.ptr += descriptor_num * DESCRIPTOR_INCREMENT_SIZE;
-	DescriptorAllocation new_block = { newCpuHandle, cur_block->Length - descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
+	D3D12_GPU_DESCRIPTOR_HANDLE newGpuHandle = cur_block->GPU;
+	newGpuHandle.ptr += descriptor_num * DESCRIPTOR_INCREMENT_SIZE;
+	
+	DescriptorAllocation new_block = { newCpuHandle,newGpuHandle, cur_block->Length - descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
 	new_block.parent = use_block.next;
 	new_block.next = cur_block->next;
 

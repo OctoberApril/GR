@@ -7,20 +7,22 @@
 #include <glm/fwd.hpp>
 
 
-static const InterfaceID IID_MATERIAL = { 4,4,0,{0,0,0,0,0,0,0,0} };
-
 class HPass;
 class Texture2D;
-class UploadBuffer;
+struct RootSignatureTableBindItem;
+struct ShaderUniform;
+
+static const InterfaceID IID_MATERIAL = { 4,3,0,{0,0,0,0,0,0,0,0} };
 
 class Material : public HObject
 {
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_MATERIAL, HObject)
 public:
+	template<typename T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 	
 	Material(const wchar_t* vsShader, const wchar_t* psShader);
-	~Material() override;
+	virtual ~Material();
 
 
 	void SetMatrix(std::string variableName, glm::mat4 matrix);
@@ -28,15 +30,18 @@ public:
 
 	ID3D12RootSignature* GetRootSignature() const;
 	ID3D12PipelineState* GetPipelineStateObject() const;
-
-	void Update(ComPtr<ID3D12GraphicsCommandList> commandlist) const;
+	
+	virtual void BindResources();
+	void InitRootSignatureResource();
+	std::vector<RootSignatureTableBindItem> GetRootSignatureTable() const;
+	int GetParameterIndex(std::string uniform_name) const;
 
 protected:
-	
-	std::unordered_map<std::string, glm::mat4> m_MatrixVariableMap;
-	std::unordered_map<std::string, SharedPtr<Texture2D>> m_Texture2DVariableMap;
 
-	UploadBuffer* m_UploadBuffer;
+	//用于Commandlist绑定资源
+	std::vector<RootSignatureTableBindItem> m_RootSignatureBindItems;
+
+	std::unordered_map<std::string, ShaderUniform> m_ShaderUniformMap;
 	
 	HPass* m_pHPass;
 };

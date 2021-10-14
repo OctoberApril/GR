@@ -1,4 +1,6 @@
 #include "Application.h"
+
+#include "GlobalShaderUniformSystem.h"
 #include "Win32App.h"
 #include "Graphics.h"
 #include "Input.h"
@@ -10,11 +12,13 @@ void Application::Initialize()
 	m_DX12GraphicsContext = std::make_shared<DX12Graphics>(m_iWidth, m_iHeight);
 	m_InputContext = std::make_shared<Input>();
 	m_RendererContext = std::make_shared<RendererSystem>();
+	m_GlobalShaderUniformSystem = std::make_shared<GlobalShaderUniformSystem>();
 	
 	m_Win32Context->Initialize();
 	m_DX12GraphicsContext->Initialize();
 	m_InputContext->Initialize();
 	m_RendererContext->Initialize();
+	m_GlobalShaderUniformSystem->Initialize();
 }
 
 void Application::Run()
@@ -28,8 +32,9 @@ void Application::Run()
 		m_Win32Context->Update();
 		m_DX12GraphicsContext->Update();
 		m_InputContext->Update();
-
+			
 		this->Update();
+		m_GlobalShaderUniformSystem->Update();
 		m_RendererContext->Render();
 		
 		m_Win32Context->LateUpdate();

@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+#include <unordered_map>
 #include "Renderer.h"
 
 
@@ -6,6 +8,7 @@ static const InterfaceID IID_MESHRENDERER = { 4,2,0,{0,0,0,0,0,0,0,0} };
 
 class Material;
 class UploadBuffer;
+struct RootSignatureTableBindItem;
 
 class MeshRenderer : public Renderer
 {
@@ -27,6 +30,7 @@ private:
 
 private:
 	SharedPtr<Material> m_Material;
+	
 	ComPtr<ID3D12CommandAllocator> m_CommandAllocator;
 	ComPtr<ID3D12GraphicsCommandList> m_CommandList;	
 	ID3D12Device* m_Device;
@@ -35,6 +39,9 @@ private:
 	D3D12_INDEX_BUFFER_VIEW m_IndexBufferView;
 
 	UploadBuffer* m_UploadBuffer;
+
+	std::unordered_map<std::string, RootSignatureTableBindItem> m_LocalUniformBindMap;
+	std::unordered_map<std::string, ComPtr<ID3D12Resource>> m_LocalUniformBufferMap;
 	
 	bool m_bInit = false;
 };

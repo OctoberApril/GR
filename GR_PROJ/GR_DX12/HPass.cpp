@@ -12,7 +12,7 @@
 /// <summary>
 /// 全局预定义 非DescriptorTable的变量
 /// </summary>
-std::unordered_map<std::string, DescriptorType> HPass::g_PreDefineAccess = { {"GlobalCameraMatrix", Descriptor} };
+std::unordered_map<std::string, DescriptorType> HPass::g_PreDefineAccess = { {"HHQ_MATRIX_V", Descriptor},{"HHQ_MATRIX_P", Descriptor} };
 
 HPass::HPass(
 	const wchar_t* vsShaderPath,
@@ -497,14 +497,11 @@ ID3D12RootSignature* HPass::GetRootSignature() const
 	return m_RootSignature.Get();
 }
 
-int HPass::GetVariableIndexInRootSignature(std::string variable_name) const
+std::unordered_map<std::string, RootSignatureParameter> HPass::GetPassRootSignatureParameters() const
 {
-	auto p = m_RootParameterMap.find(variable_name);
-	if (p != m_RootParameterMap.end())
-		return p->second.ParameterIndex;
-
-	return -1;
+	return m_RootParameterMap;
 }
+
 
 
 
