@@ -32,7 +32,9 @@ private:
 
 template <typename T>
 T* GameObject::GetComponent()
-{	
+{
+	if (T::GetIID() == Transform::GetIID()) return (T*)m_pTransform;
+	
 	SharedPtr<T> result;
 	for (int i = 0; i < m_Comps.size(); i++)
 	{
