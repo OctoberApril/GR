@@ -87,8 +87,8 @@ void Texture2D::CreateImageResource()
 	dstImageBarrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
 	
 	commandlist->ResourceBarrier(1, &dstImageBarrier);
-	
-	UpdateSubresources(commandlist.Get(), m_Resource.Get(), uploadRes.Get(), 0, 0, 1, &data);
+	commandlist->CopyResource(m_Resource.Get(), uploadRes.Get());
+	//UpdateSubresources(commandlist.Get(), m_Resource.Get(), uploadRes.Get(), 0, 0, 1, &data);
 	commandlist->Close();
 	cmdQueue->ExecuteCommandLists(1, (ID3D12CommandList**)commandlist.GetAddressOf());
 	cmdQueue->Signal(fence.Get(), 1);
