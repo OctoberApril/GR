@@ -22,9 +22,6 @@
     <Filter Include="Model\Sponza">
       <UniqueIdentifier>{0d789472-cdcd-4810-acc8-2878724d161d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\Sponza\textures">
-      <UniqueIdentifier>{0db5d249-a470-4af5-988e-5874817dc248}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{f339ee17-134f-42b1-81a1-01ef0fa8d1cd}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,9 @@
     </Filter>
     <Filter Include="头文件\Misc">
       <UniqueIdentifier>{a713cd27-b90e-40a5-86f9-a3be7c6de0de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="textures">
+      <UniqueIdentifier>{20fa3baa-7f8c-445e-a718-db94cb6af38a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -588,146 +588,146 @@
     <CopyFileToFolders Include="Shader\gpass_vs.hlsl">
       <Filter>Shader</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\background.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\background_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\chain_texture.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\chain_texture_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\lion.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\lion_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\lion2_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\spnza_bricks_a_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\spnza_bricks_a_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_arch_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_arch_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_ceiling_a_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_ceiling_a_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_a_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_a_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_b_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_b_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_c_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_column_c_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_blue_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_curtain_green_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_details_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_details_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_blue_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_fabric_green_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_flagpole_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_flagpole_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_floor_a_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_floor_a_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_roof_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_roof_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_thorn_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\sponza_thorn_diff.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\Thumbs.db">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_dif.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_hanging.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_hanging_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_plant.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_round.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="Model\Sponza\textures\vase_round_ddn.tga">
-      <Filter>Model\Sponza\textures</Filter>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="Model\Sponza\sponza.mtl">
       <Filter>Model\Sponza</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="Model\Sponza\sponza.obj">
       <Filter>Model\Sponza</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\background.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\background_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\chain_texture.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\chain_texture_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\lion.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\lion_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\lion2_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\spnza_bricks_a_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\spnza_bricks_a_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_arch_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_arch_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_ceiling_a_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_ceiling_a_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_column_a_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_column_a_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_column_b_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_column_b_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_column_c_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_column_c_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_curtain_blue_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_curtain_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_curtain_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_curtain_green_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_details_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_details_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_fabric_blue_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_fabric_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_fabric_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_fabric_green_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_flagpole_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_flagpole_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_floor_a_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_floor_a_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_roof_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_roof_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_thorn_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\sponza_thorn_diff.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\Thumbs.db">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_dif.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_hanging.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_hanging_ddn.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_plant.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_round.tga">
+      <Filter>textures</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="textures\vase_round_ddn.tga">
+      <Filter>textures</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

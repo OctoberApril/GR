@@ -8,7 +8,7 @@ class DefaultMaterial : public Material
 public:
 	IMPLEMENT_QUERY_INTERFACE_INPLACE(IID_DEFAULT_MATERIAL, Material)
 public:
-	DefaultMaterial() :Material(L"./Shader/gpass_vs.hlsl", L"./Shader/gpass_ps.hlsl") {}
+	DefaultMaterial();
 
 	void BindResources() override;
 	

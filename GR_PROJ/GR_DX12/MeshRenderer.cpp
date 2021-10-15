@@ -46,21 +46,37 @@ void MeshRenderer::Initialize()
 	Mesh* mesh = this->m_pGameObject->GetComponent<Mesh>();
 	assert(mesh != nullptr);
 	if(!mesh->IsEmpty())
-	{
+	{		
 		auto vertices = mesh->GetVertices();
+		auto uvs = mesh->GetUv0s();		
 		auto indices = mesh->GetIndices();
 
-		BufferAllocation verticesBuffer = m_UploadBuffer->Allocate(vertices.size() * sizeof(glm::vec3), 4);
+		struct tempVertexData
+		{
+			glm::vec3 vertex;
+			glm::vec2 uv;
+		};
+		
+		std::vector<tempVertexData> data;
+		for(int i = 0;i < vertices.size();i++)
+		{
+			tempVertexData td;
+			td.vertex = vertices[i];
+			td.uv = uvs[i];
+			data.push_back(td);
+		}
+		
+		BufferAllocation verticesBuffer = m_UploadBuffer->Allocate(data.size() * sizeof(tempVertexData), 4);
 		BufferAllocation indicesBuffer = m_UploadBuffer->Allocate(indices.size() * sizeof(uint32_t), 4);
 
-		memcpy(verticesBuffer.CpuAddress, &vertices[0], vertices.size() * sizeof(glm::vec3));
+		memcpy(verticesBuffer.CpuAddress, &data[0], data.size() * sizeof(tempVertexData));
 		m_VertexBufferView.BufferLocation = verticesBuffer.GpuAddress;
-		m_VertexBufferView.SizeInBytes = vertices.size() * sizeof(glm::vec3);
-		m_VertexBufferView.StrideInBytes = sizeof(glm::vec3);
+		m_VertexBufferView.SizeInBytes = verticesBuffer.Size;
+		m_VertexBufferView.StrideInBytes = sizeof(tempVertexData);
 
 		memcpy(indicesBuffer.CpuAddress, &indices[0], indices.size() * sizeof(uint32_t));
 		m_IndexBufferView.BufferLocation = indicesBuffer.GpuAddress;
-		m_IndexBufferView.SizeInBytes = indices.size() * sizeof(uint32_t);
+		m_IndexBufferView.SizeInBytes = indicesBuffer.Size;
 		m_IndexBufferView.Format = DXGI_FORMAT_R32_UINT;
 	}
 	

@@ -10,6 +10,7 @@
 #include "ThirdCamera.h"
 #include "GameObject.h"
 #include "Graphics.h"
+#include "assimp/material.h"
 
 class Sample : public Application
 {
@@ -43,7 +44,7 @@ void Sample::Start()
 	//Load Model
 	m_Castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
 	//m_Castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
-
+	
 	m_CameraObj = new GameObject();
 	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
 	m_Camera->SetCameraMode(CameraMode_Ortho);

@@ -30,13 +30,19 @@ DescriptorAllocationPage::DescriptorAllocationPage(D3D12_DESCRIPTOR_HEAP_TYPE de
 
 bool DescriptorAllocationPage::HasSpace(size_t descriptor_num) const
 {
-	auto iter = std::find(m_AvaliableBlocks.begin(), m_AvaliableBlocks.end(), descriptor_num);
+	auto iter = std::find_if(m_AvaliableBlocks.begin(), m_AvaliableBlocks.end(), [descriptor_num](const DescriptorAllocation& allocation)
+		{
+			return allocation.Length > descriptor_num;
+		});
 	return iter == m_AvaliableBlocks.end();
 }
 
 DescriptorAllocation DescriptorAllocationPage::Allocate(size_t descriptor_num)
-{
-	auto cur_block = std::find(m_AvaliableBlocks.begin(), m_AvaliableBlocks.end(), descriptor_num);
+{	
+	auto cur_block = std::find_if(m_AvaliableBlocks.begin(), m_AvaliableBlocks.end(),[descriptor_num](const DescriptorAllocation& allocation)
+	{
+			return allocation.Length > descriptor_num;
+	});
 	assert(cur_block != m_AvaliableBlocks.end());
 
 	DescriptorAllocation use_block = { cur_block->CPU,cur_block->GPU,descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };

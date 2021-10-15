@@ -1,5 +1,6 @@
 #include "AssetImporter.h"
 
+#include <iostream>
 #include "DefaultMaterial.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
@@ -9,7 +10,7 @@
 #include "Mesh.h"
 #include "MeshRenderer.h"
 #include "Transform.h"
-
+#include "Texture2D.h"
 
 GameObject* AssetImporter::ImportModel(const char* path)
 {
@@ -67,8 +68,22 @@ void AssetImporter::RecursiveModelNode(GameObject* parent, const aiScene* scene,
 				indices->push_back(face.mIndices[k]);
 			}
 		}
+
+		//解析Material中的diffuse贴图
+		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+		for(int j = 0;j < material->GetTextureCount(aiTextureType_DIFFUSE);i++)
+		{
+			aiString str;
+			material->GetTexture(aiTextureType_DIFFUSE, i, &str);
+			Texture2D* diffuse = new Texture2D(str.C_Str());
+			mat->SetTexture2D("diffuse",diffuse);
+		}
 	}
 
+	
+
+	
+	
 	mesh->SetVectices(*vertices);
 	mesh->SetColors(*colors);
 	mesh->SetUv0s(*uv0);

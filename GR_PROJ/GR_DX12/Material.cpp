@@ -34,7 +34,35 @@ void Material::SetMatrix(std::string variableName, glm::mat4 matrix)
 
 void Material::SetTexture2D(std::string variableName, Texture2D* texture)
 {
+	auto iter = m_ShaderUniformMap.find(variableName);
+	if (iter == m_ShaderUniformMap.end()) return;
 
+	auto device = DX12Graphics::Instance->GetDevice();
+	if(iter->second.UniformType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
+	{
+		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
+		desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		desc.Texture2D.MipLevels = 1;
+		desc.Texture2D.MostDetailedMip = 0;
+		desc.Texture2D.PlaneSlice = 0;
+		desc.Texture2D.ResourceMinLODClamp = 0;
+		
+		device->CreateShaderResourceView(texture->GetResource().Get(), &desc, iter->second.CpuDescriptorHandle);
+	}
+	else
+	{
+		int idx = GetParameterIndex(variableName);
+		for(auto p = m_RootSignatureBindItems.begin();p != m_RootSignatureBindItems.end();p++)
+		{
+			if(p->ParameterIndex == idx)
+			{
+				p->BufferLocation = texture->GetResource()->GetGPUVirtualAddress();
+				break;
+			}
+		}
+	}
 }
 
 ID3D12PipelineState* Material::GetPipelineStateObject() const

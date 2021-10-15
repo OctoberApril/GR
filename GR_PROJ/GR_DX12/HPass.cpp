@@ -134,7 +134,7 @@ void HPass::RebuildPassReflectionTable()
 				ReflectionShaderVariableInfo info = {};
 				info.VariableName = bindDesc.Name;
 				info.Type = bindDesc.Type;
-				info.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+				info.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 				info.BindPoint = bindDesc.BindPoint;
 				info.BindCount = bindDesc.BindCount;
 				info.Space = bindDesc.Space;
@@ -291,7 +291,7 @@ void HPass::RebuildRootSignature()
 		else
 		{
 			if (rootParameters[rootParameters.size() - 1].RootParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE
-				|| rootParameters[rootParameters.size() - 1].DescriptorTable.HeapType == parameter.DescriptorTable.HeapType)
+				&& rootParameters[rootParameters.size() - 1].DescriptorTable.HeapType == parameter.DescriptorTable.HeapType)
 			{
 				parameter.ParameterIndex = rootParameters[rootParameters.size() - 1].ParameterIndex;
 				parameter.DescriptorTable.Offset = rootParameters[rootParameters.size() - 1].DescriptorTable.Offset + rootParameters[rootParameters.size() - 1].DescriptorTable.Size;
@@ -393,8 +393,8 @@ void HPass::RebuildPipelineStateObject()
 	psoDesc.SampleDesc.Quality = 0;
 	psoDesc.NodeMask = 0;
 
-	D3D12_INPUT_ELEMENT_DESC elements[1];
-	psoDesc.InputLayout.NumElements = 1;
+	D3D12_INPUT_ELEMENT_DESC elements[2];
+	psoDesc.InputLayout.NumElements = 2;
 	psoDesc.InputLayout.pInputElementDescs = elements;
 	elements[0].AlignedByteOffset = 0;
 	elements[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
@@ -404,14 +404,14 @@ void HPass::RebuildPipelineStateObject()
 	elements[0].SemanticName = "POSITION";
 	elements[0].InstanceDataStepRate = 0;
 
-	/*elements[1].AlignedByteOffset = sizeof(float) * 3;
-	elements[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	elements[1].AlignedByteOffset = sizeof(float) * 3;
+	elements[1].Format = DXGI_FORMAT_R32G32_FLOAT;
 	elements[1].InputSlot = 0;
 	elements[1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
 	elements[1].SemanticIndex = 0;
-	elements[1].SemanticName = "COLOR";
+	elements[1].SemanticName = "TEXCOORD";
 	elements[1].InstanceDataStepRate = 0;
-
+	/*
 	elements[2].AlignedByteOffset = sizeof(float) * 7;
 	elements[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	elements[2].InputSlot = 0;
