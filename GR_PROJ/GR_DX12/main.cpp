@@ -23,7 +23,7 @@ protected:
 	void Stop() override;
 	void Update() override;
 
-	template<typename T> using SharedPtr = ::SharedPtr<T>;	
+	template<typename T> using SharedPtr = ::SharedPtr<T>;
 
 	SharedPtr<Scene> m_SampleScene;
 	ThirdCamera* m_Camera;
@@ -45,14 +45,16 @@ void Sample::Start()
 	m_Castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
 	//m_Castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
 	auto t = m_Castle->GetComponent<Transform>();
-	t->SetScale(1, 1, 1);
+	t->SetScale(5, 5, 5);
 
 	m_CameraObj = new GameObject();
 	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
 	m_Camera->SetCameraMode(CameraMode_Ortho);
-	m_Camera->SetOrthoCamera(-2000, 2000, 2000, -2000, -1000, 1000);
+	m_Camera->SetOrthoCamera(-3000, 3000, 3000, -3000, -3000, 3000);
+	//m_Camera->SetCameraMode(CameraMode_Perspective);
+	//m_Camera->SetPerspectiveCamera(90, 1, 0.1f, 2000);
 	auto transform = m_CameraObj->GetComponent<Transform>();
-	transform->SetPosition(0, 200, 0);
+	transform->SetPosition(0, -0, 0);
 }
 
 void Sample::Update()
@@ -67,7 +69,7 @@ void Sample::Update()
 		static float2 lastMousePosition = Input::Instance->GetMousePosition();
 
 		if (Input::Instance->GetMouseButton(0))
-		{		
+		{
 			float2 currentMousePosition = Input::Instance->GetMousePosition();
 			float2 deltaMove = currentMousePosition - lastMousePosition;
 			lastMousePosition = currentMousePosition;
@@ -88,42 +90,42 @@ void Sample::Update()
 
 	if (Input::Instance->GetKey(KeyCode::W))
 	{
-		m_Position += glm::vec3(-0.0f, 0, 50);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 0, 5.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::S))
 	{
-		m_Position += glm::vec3(-0.0f, 0.0f, -50.0f);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 0, -5.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::Q))
 	{
-		m_Position += glm::vec3(-0.0f, 50, 0);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 5, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::R))
 	{
-		m_Position += glm::vec3(-0.0f, -50.0f, 0.0f);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, -5.0f, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::A))
 	{
-		m_Position += glm::vec3(-30.5f, 0, 0);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-3.5f, 0, 0.0f, 1);
 		transform->SetPosition(m_Position);
-		std::cout <<"["<< m_Position.x << ","<< m_Position.y<<","<< m_Position.z<<"]" << std::endl;
+		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::D))
 	{
-		m_Position += glm::vec3(30.5f, 0, 0);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(3.5f, 0, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
