@@ -109,20 +109,20 @@ void Transform::AddChild(Transform* other)
 
 glm::mat4 Transform::GetWorldToLocalMatrix() const
 {
-	auto S = glm::scale(glm::mat4(1), m_Scale);
-	auto R = glm::toMat4(m_Rotation);
-	auto T = glm::translate(glm::mat4(1), -m_Position);
-	
-	glm::mat4 TRS = S * R * T;
-	if (m_Parent != nullptr)
-		return m_Parent->GetWorldToLocalMatrix() * TRS;
-	else
-		return TRS;
+	return glm::inverse(GetLocalToWorldMatrix());
 }
 
 glm::mat4 Transform::GetLocalToWorldMatrix() const
 {
-	return glm::inverse(GetWorldToLocalMatrix());
+	auto S = glm::scale(glm::mat4(1), m_Scale);
+	auto R = glm::toMat4(m_Rotation);
+	auto T = glm::translate(glm::mat4(1), m_Position);
+
+	glm::mat4 TRS = T * S * R;
+	if (m_Parent != nullptr)
+		return m_Parent->GetLocalToWorldMatrix() * TRS;
+	else
+		return TRS;
 }
 
 
