@@ -45,7 +45,7 @@ void Sample::Start()
 	m_Castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
 	//m_Castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
 	auto t = m_Castle->GetComponent<Transform>();
-	t->SetScale(1000, 1000, 1000);
+	t->SetScale(1, 1, 1);
 
 	m_CameraObj = new GameObject();
 	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
@@ -73,7 +73,7 @@ void Sample::Update()
 			lastMousePosition = currentMousePosition;
 
 			float xTheta = deltaMove.x / (w * 1.0f) * 3.1415927f * 0.5f;
-			float yTheta = deltaMove.y / (h * 1.0f) * 3.1415927f * 0.5f;
+			float yTheta = 0; //deltaMove.y / (h * 1.0f) * 3.1415927f * 0.5f;
 
 			m_Rotation = glm::quat(glm::vec3(yTheta, xTheta, 0.0f)) * m_Rotation;
 			m_CameraObj->transform()->SetRotation(m_Rotation);
@@ -95,7 +95,21 @@ void Sample::Update()
 
 	if (Input::Instance->GetKey(KeyCode::S))
 	{
-		m_Position += glm::vec3(-0.0f, 0, -50.0f);
+		m_Position += glm::vec3(-0.0f, 0.0f, -50.0f);
+		transform->SetPosition(m_Position);
+		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
+	}
+
+	if (Input::Instance->GetKey(KeyCode::Q))
+	{
+		m_Position += glm::vec3(-0.0f, 50, 0);
+		transform->SetPosition(m_Position);
+		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
+	}
+
+	if (Input::Instance->GetKey(KeyCode::R))
+	{
+		m_Position += glm::vec3(-0.0f, -50.0f, 0.0f);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}

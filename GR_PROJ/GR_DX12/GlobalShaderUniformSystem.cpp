@@ -73,6 +73,7 @@ void GlobalShaderUniformSystem::Update()
 		byte* dst = nullptr;
 		m_GlobalUniformBufferMap["HHQ_MATRIX_V"]->Map(0, nullptr, (void**)&dst);
 		glm::mat4 viewMat = camera->GetViewMatrix();
+		auto t = glm::transpose(viewMat);
 		float* src = glm::value_ptr(viewMat);
 		memcpy(dst, src, sizeof(glm::mat4));
 		m_GlobalUniformBufferMap["HHQ_MATRIX_V"]->Unmap(0, nullptr);
@@ -82,6 +83,7 @@ void GlobalShaderUniformSystem::Update()
 		byte* dst = nullptr;
 		m_GlobalUniformBufferMap["HHQ_MATRIX_P"]->Map(0, nullptr, (void**)&dst);
 		glm::mat4 projMat = camera->GetPerspectiveMatrix();
+		auto t = glm::transpose(projMat);
 		float* src = glm::value_ptr(projMat);
 		memcpy(dst, src, sizeof(glm::mat4));
 		m_GlobalUniformBufferMap["HHQ_MATRIX_P"]->Unmap(0, nullptr);

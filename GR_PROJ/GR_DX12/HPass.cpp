@@ -12,7 +12,7 @@
 /// <summary>
 /// 全局预定义 非DescriptorTable的变量
 /// </summary>
-std::unordered_map<std::string, DescriptorType> HPass::g_PreDefineAccess = { {"HHQ_MATRIX_V", Descriptor},{"HHQ_MATRIX_P", Descriptor} };
+std::unordered_map<std::string, DescriptorType> HPass::g_PreDefineAccess = { {"HHQ_MATRIX_V", Descriptor},{"HHQ_MATRIX_P", Descriptor},{"HHQ_MATRIX_Model",Descriptor}};
 
 HPass::HPass(
 	const wchar_t* vsShaderPath,

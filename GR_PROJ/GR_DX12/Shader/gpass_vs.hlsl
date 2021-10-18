@@ -21,10 +21,15 @@ cbuffer HHQ_MATRIX_P : register(b1)
 	float4x4 projMatrix;
 }
 
+cbuffer HHQ_MATRIX_Model : register(b2)
+{
+	float4x4 modelMatrix;
+}
+
 VS_OUT main(VS_IN i)
 {
 	VS_OUT o;
-	o.worldPosition = mul(projMatrix, mul(viewMatrix, float4(i.modelPosition.xyz, 1.0)));
+	o.worldPosition = mul(projMatrix, mul(viewMatrix, mul(modelMatrix,float4(i.modelPosition.xyz, 1.0))));
 	o.uv0 = i.uv;
 
 	return o;

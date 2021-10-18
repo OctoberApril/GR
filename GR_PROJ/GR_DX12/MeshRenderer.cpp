@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "ShaderUniform.h"
 #include "UploadBuffer.h"
+#include <glm/gtc/type_ptr.hpp>
 
 MeshRenderer::MeshRenderer() :m_Material(nullptr), m_CommandAllocator(nullptr), m_CommandList(nullptr), m_Device(nullptr), m_bInit(false),m_UploadBuffer(nullptr)
 {
@@ -114,6 +115,17 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 	m_CommandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_CommandList->SetGraphicsRootSignature(m_Material->GetRootSignature());
 	m_CommandList->SetPipelineState(m_Material->GetPipelineStateObject());
+	
+	{		
+		byte* dst = nullptr;
+		m_LocalUniformBufferMap["HHQ_MATRIX_Model"]->Map(0, nullptr, (void**)&dst);
+		auto mMatrix = this->m_pTransform->GetLocalToWorldMatrix();
+		float* src = glm::value_ptr(mMatrix);
+		memcpy(dst, src, sizeof(glm::mat4));
+		m_LocalUniformBufferMap["HHQ_MATRIX_Model"]->Unmap(0, nullptr);
+		int id = m_Material->GetParameterIndex("HHQ_MATRIX_Model");
+		m_CommandList->SetGraphicsRootConstantBufferView(id, m_LocalUniformBindMap["HHQ_MATRIX_Model"].BufferLocation);
+	}
 
 	//绑定
 	auto rsTable = m_Material->GetRootSignatureTable();
