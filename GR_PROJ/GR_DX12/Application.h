@@ -11,7 +11,7 @@ class RendererSystem;
 class Application
 {
 public:
-	Application(const char* app_name = "OctApp", int w = 800, int h = 600) :m_AppName(app_name), m_iWidth(w), m_iHeight(h) {}
+	Application(const char* app_name = "OctApp", int w = 1600, int h = 800) :m_AppName(app_name), m_iWidth(w), m_iHeight(h) {}
 	~Application() = default;
 	Application(const Application&) = delete;
 	Application(Application&&) = delete;

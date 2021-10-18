@@ -83,7 +83,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>intermidiate\$(Platform)\$(Configuration)\</IntDir>
-    <LibraryPath>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
+    <LibraryPath>F:\Git_Projs\GR\GR_PROJ\GR_DX12\ThirdParty\Libs;$(LibraryPath)</LibraryPath>
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,12 +129,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\Git_Projects\GR\GR_PROJ\GR_DX12\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>F:\Git_Projs\GR\GR_PROJ\GR_DX12\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d12.lib;dxguid.lib;dxgi.lib;d3dcompiler.lib;assimp-vc142-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d12.lib;dxguid.lib;dxgi.lib;d3dcompiler.lib;assimp-vc142-mt.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CopyFileToFolders>
       <DestinationFileName>%(RelativeDir)%(Filename)%(Extension)</DestinationFileName>

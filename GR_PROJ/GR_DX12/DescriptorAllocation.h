@@ -7,14 +7,16 @@ class DescriptorAllocationPage;
 class DescriptorAllocation
 {
 public:
-	DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle, size_t length, uint32_t incremental, DescriptorAllocationPage* owner = nullptr)
-		:CPU(cpuHandle), GPU(gpuHandle), Length(length), IncrementInDescriptorHeap(incremental), m_Owner(owner)
+	DescriptorAllocation(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle, ID3D12DescriptorHeap* heap, size_t length, uint32_t incremental, DescriptorAllocationPage* owner = nullptr)
+		:CPU(cpuHandle), GPU(gpuHandle), Length(length), IncrementInDescriptorHeap(incremental), m_Owner(owner), pHeap(heap)
 	{
 
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE CPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE GPU;
+
+	ID3D12DescriptorHeap* pHeap;
 	
 	size_t Length;
 

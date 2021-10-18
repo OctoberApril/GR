@@ -21,7 +21,7 @@ DescriptorAllocationPage::DescriptorAllocationPage(D3D12_DESCRIPTOR_HEAP_TYPE de
 	D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle = m_DescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle = m_DescriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	
-	DescriptorAllocation allocation(cpuHandle, gpuHandle, descriptor_num, DESCRIPTOR_INCREMENT_SIZE, this);
+	DescriptorAllocation allocation(cpuHandle, gpuHandle,m_DescriptorHeap.Get(), descriptor_num, DESCRIPTOR_INCREMENT_SIZE, this);
 	allocation.parent = 0;
 	allocation.next = descriptor_num;
 
@@ -45,7 +45,7 @@ DescriptorAllocation DescriptorAllocationPage::Allocate(size_t descriptor_num)
 	});
 	assert(cur_block != m_AvaliableBlocks.end());
 
-	DescriptorAllocation use_block = { cur_block->CPU,cur_block->GPU,descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
+	DescriptorAllocation use_block = { cur_block->CPU,cur_block->GPU,m_DescriptorHeap.Get(),descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
 	use_block.parent = cur_block->parent;
 	use_block.next = use_block.parent + descriptor_num;
 
@@ -54,7 +54,7 @@ DescriptorAllocation DescriptorAllocationPage::Allocate(size_t descriptor_num)
 	D3D12_GPU_DESCRIPTOR_HANDLE newGpuHandle = cur_block->GPU;
 	newGpuHandle.ptr += descriptor_num * DESCRIPTOR_INCREMENT_SIZE;
 	
-	DescriptorAllocation new_block = { newCpuHandle,newGpuHandle, cur_block->Length - descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
+	DescriptorAllocation new_block = { newCpuHandle,newGpuHandle,m_DescriptorHeap.Get(), cur_block->Length - descriptor_num,DESCRIPTOR_INCREMENT_SIZE,this };
 	new_block.parent = use_block.next;
 	new_block.next = cur_block->next;
 

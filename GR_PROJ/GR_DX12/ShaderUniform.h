@@ -33,4 +33,5 @@ struct RootSignatureTableBindItem
 		D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHandle;
 		D3D12_GPU_VIRTUAL_ADDRESS BufferLocation;
 	};
+	ID3D12DescriptorHeap* pHeap;
 };

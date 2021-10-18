@@ -41,7 +41,7 @@ void Material::SetTexture2D(std::string variableName, Texture2D* texture)
 	if(iter->second.UniformType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
 	{
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.Texture2D.MipLevels = 1;
@@ -138,6 +138,7 @@ void Material::InitRootSignatureResource()
 
 			auto allocation = DX12Graphics::Instance->AllocateDescriptors(info.DescriptorTable.HeapType, sum);
 			item.DescriptorHandle = allocation.GPU;
+			item.pHeap = allocation.pHeap;
 			m_RootSignatureBindItems.emplace_back(item);
 
 			for (auto m = p->second.begin(); m != p->second.end(); m++)

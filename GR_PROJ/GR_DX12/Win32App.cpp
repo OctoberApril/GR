@@ -29,7 +29,7 @@ bool Win32App::Initialize()
 
 		RegisterClassA(&wndClass);
 
-		m_Hwnd = CreateWindowA("H_DX12", m_WindowTitle.c_str(), WS_OVERLAPPEDWINDOW, m_iWidth, m_iHeight, m_iWidth, m_iHeight, nullptr, nullptr, nullptr, nullptr);
+		m_Hwnd = CreateWindowA("H_DX12", m_WindowTitle.c_str(), WS_OVERLAPPEDWINDOW, 100, 100, m_iWidth, m_iHeight, nullptr, nullptr, nullptr, nullptr);
 		SetWindowLongPtr(m_Hwnd, GWLP_USERDATA, (LONG)this);
 
 		UpdateWindow(m_Hwnd);

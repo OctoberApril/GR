@@ -44,13 +44,15 @@ void Sample::Start()
 	//Load Model
 	m_Castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
 	//m_Castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
-	
+	auto t = m_Castle->GetComponent<Transform>();
+	t->SetScale(1000, 1000, 1000);
+
 	m_CameraObj = new GameObject();
 	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
 	m_Camera->SetCameraMode(CameraMode_Ortho);
 	m_Camera->SetOrthoCamera(-2000, 2000, 2000, -2000, -1000, 1000);
 	auto transform = m_CameraObj->GetComponent<Transform>();
-	transform->SetPosition(0, 0, -500);
+	transform->SetPosition(0, 200, 0);
 }
 
 void Sample::Update()
@@ -86,26 +88,28 @@ void Sample::Update()
 
 	if (Input::Instance->GetKey(KeyCode::W))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-.0f, 0, .5f, 1);
+		m_Position += glm::vec3(-0.0f, 0, 50);
 		transform->SetPosition(m_Position);
+		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::S))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-.0f, 0, -.5f, 1);
+		m_Position += glm::vec3(-0.0f, 0, -50.0f);
 		transform->SetPosition(m_Position);
+		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::A))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-1.5f, 0, 0, 1);
+		m_Position += glm::vec3(-30.5f, 0, 0);
 		transform->SetPosition(m_Position);
 		std::cout <<"["<< m_Position.x << ","<< m_Position.y<<","<< m_Position.z<<"]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::D))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(1.5f, 0, 0, 1);
+		m_Position += glm::vec3(30.5f, 0, 0);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}

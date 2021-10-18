@@ -19,6 +19,7 @@ GameObject* AssetImporter::ImportModel(const char* path)
 
 	GameObject* go = new GameObject();
 	RecursiveModelNode(go, pScene, pScene->mRootNode);
+	std::cout << "Load Over..." << std::endl;
 	return go;
 }
 
@@ -71,17 +72,21 @@ void AssetImporter::RecursiveModelNode(GameObject* parent, const aiScene* scene,
 
 		//解析Material中的diffuse贴图
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		for(int j = 0;j < material->GetTextureCount(aiTextureType_DIFFUSE);i++)
+		for(int j = 0;j < material->GetTextureCount(aiTextureType_AMBIENT);j++)
 		{
 			aiString str;
-			material->GetTexture(aiTextureType_DIFFUSE, i, &str);
-			Texture2D* diffuse = new Texture2D(str.C_Str());
-			mat->SetTexture2D("diffuse",diffuse);
+			material->GetTexture(aiTextureType_AMBIENT, j, &str);
+			if (str.length > 0)
+			{
+				const char* src = str.C_Str();
+				wchar_t* dst = new wchar_t[str.length + 1];
+
+				mbstowcs_s(nullptr,dst,str.length + 1, src, (int)str.length);
+				Texture2D* diffuse = new Texture2D(dst);
+				mat->SetTexture2D("diffuse", diffuse);
+			}
 		}
 	}
-
-	
-
 	
 	
 	mesh->SetVectices(*vertices);

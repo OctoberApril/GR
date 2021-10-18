@@ -43,12 +43,14 @@ public:
 	static DX12Graphics* Instance;
 
 private:
+	
+	std::shared_ptr<DescriptorAllocator> m_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
 
 	ComPtr<ID3D12Device3> m_Device;
 	ComPtr<ID3D12CommandQueue> m_GraphicsCommandQueue;
 	ComPtr<IDXGISwapChain1> m_SwapChain;
 
-	std::shared_ptr<DescriptorAllocator> m_DescriptorAllocators[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+	
 
 	ComPtr<ID3D12DescriptorHeap> m_RtvDescriptorHeap;
 	ComPtr<ID3D12DescriptorHeap> m_DsvDescriptorHeap;

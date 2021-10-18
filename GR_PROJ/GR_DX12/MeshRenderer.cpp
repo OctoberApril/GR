@@ -133,6 +133,7 @@ Microsoft::WRL::ComPtr<ID3D12CommandList> MeshRenderer::Draw()
 		}
 		else if(rsTable[i].ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
 		{
+			m_CommandList->SetDescriptorHeaps(1, &rsTable[i].pHeap);
 			m_CommandList->SetGraphicsRootDescriptorTable(rsTable[i].ParameterIndex, rsTable[i].DescriptorHandle);
 		}
 	}
