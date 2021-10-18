@@ -45,7 +45,7 @@ void Sample::Start()
 	m_Castle = AssetImporter::ImportModel("./Model/Sponza/sponza.obj");
 	//m_Castle = AssetImporter::ImportModel("./Model/BackPack/BackPack.fbx");
 	auto t = m_Castle->GetComponent<Transform>();
-	t->SetScale(5, 5, 5);
+	t->SetScale(2,2, 2);
 
 	m_CameraObj = new GameObject();
 	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
@@ -54,7 +54,7 @@ void Sample::Start()
 	//m_Camera->SetCameraMode(CameraMode_Perspective);
 	//m_Camera->SetPerspectiveCamera(90, 1, 0.1f, 2000);
 	auto transform = m_CameraObj->GetComponent<Transform>();
-	transform->SetPosition(0, -0, 0);
+	transform->SetPosition(0, 0, 200);
 }
 
 void Sample::Update()
@@ -90,42 +90,42 @@ void Sample::Update()
 
 	if (Input::Instance->GetKey(KeyCode::W))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 0, 5.0f, 1);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 0, 50.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::S))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 0, -5.0f, 1);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 0, -50.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::Q))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 5, 0.0f, 1);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, 50, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::R))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, -5.0f, 0.0f, 1);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-0.0f, -50.0f, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::A))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-3.5f, 0, 0.0f, 1);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(-30.5f, 0, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
 
 	if (Input::Instance->GetKey(KeyCode::D))
 	{
-		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(3.5f, 0, 0.0f, 1);
+		m_Position = transform->GetLocalToWorldMatrix() * glm::vec4(30.5f, 0, 0.0f, 1);
 		transform->SetPosition(m_Position);
 		std::cout << "[" << m_Position.x << "," << m_Position.y << "," << m_Position.z << "]" << std::endl;
 	}
