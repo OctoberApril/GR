@@ -123,21 +123,21 @@ bool DX12Graphics::Initialize()
 			resourceDesc.Height = m_GraphicsHeight;
 			resourceDesc.DepthOrArraySize = 1;
 			resourceDesc.MipLevels = 1;
-			resourceDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			resourceDesc.Format = DXGI_FORMAT_D32_FLOAT;
 			resourceDesc.SampleDesc.Count = 1;
 			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 			resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
 			D3D12_CLEAR_VALUE clearValue = {};
-			clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			clearValue.Format = DXGI_FORMAT_D32_FLOAT;
 			clearValue.DepthStencil.Depth = 1.0f;
 
 			ThrowIfFailed(m_Device->CreateCommittedResource(&dsvProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue, IID_PPV_ARGS(m_DsvResource.GetAddressOf())));
 
 			D3D12_DEPTH_STENCIL_VIEW_DESC dsvViewDesc = {};
-			dsvViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			dsvViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
 			dsvViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-			dsvViewDesc.Flags = D3D12_DSV_FLAG_READ_ONLY_DEPTH;
+			dsvViewDesc.Flags = D3D12_DSV_FLAG_NONE;
 			m_Device->CreateDepthStencilView(m_DsvResource.Get(), &dsvViewDesc, m_DsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
 		}
 

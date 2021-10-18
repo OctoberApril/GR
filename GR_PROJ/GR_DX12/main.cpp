@@ -49,10 +49,10 @@ void Sample::Start()
 
 	m_CameraObj = new GameObject();
 	m_Camera = m_CameraObj->AddComponent<ThirdCamera>();
-	m_Camera->SetCameraMode(CameraMode_Ortho);
-	m_Camera->SetOrthoCamera(-3000, 3000, 3000, -3000, -3000, 3000);
-	//m_Camera->SetCameraMode(CameraMode_Perspective);
-	//m_Camera->SetPerspectiveCamera(90, 1, 0.1f, 2000);
+	//m_Camera->SetCameraMode(CameraMode_Ortho);
+	//m_Camera->SetOrthoCamera(-3000, 3000, 3000, -3000, -3000, 3000);
+	m_Camera->SetCameraMode(CameraMode_Perspective);
+	m_Camera->SetPerspectiveCamera(90, 1, 0.1f, 2000);
 	auto transform = m_CameraObj->GetComponent<Transform>();
 	transform->SetPosition(0, 0, 200);
 }
