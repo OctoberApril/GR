@@ -1,0 +1,4 @@
+GR_PROJ/ThirdParty/static_libs/release/assimp-vc142-mt.lib filter=lfs diff=lfs merge=lfs -text
+GR_PROJ/ThirdParty/static_libs/debug/assimp-vc142-mtd.lib filter=lfs diff=lfs merge=lfs -text
+GR_PROJ/ThirdParty/static_libs/release/assimp-vc142-mt.pdb filter=lfs diff=lfs merge=lfs -text
+GR_PROJ/ThirdParty/static_libs/debug/assimp-vc142-mtd.pdb filter=lfs diff=lfs merge=lfs -text
