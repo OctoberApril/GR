@@ -31,5 +31,6 @@
 
 #custom
 .vs/
+Debug/
 x64/
-intermidiate/
+Intermidiate/
